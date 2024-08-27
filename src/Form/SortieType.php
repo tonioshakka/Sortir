@@ -27,7 +27,7 @@ class SortieType extends AbstractType
             ->add('infosSortie')
             ->add('etat', EntityType::class, [
                 'class' => Etat::class,
-                'choice_label' => 'id',
+                'choice_label' => 'libelle',
             ])
             ->add('participant', EntityType::class, [
                 'class' => Participant::class,

@@ -74,8 +74,41 @@ class SortieController extends AbstractController
         if ($this->isCsrfTokenValid('delete'.$sortie->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($sortie);
             $entityManager->flush();
+    }
+
+return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
+}
+
+#[Route('/annuler', name: 'app_sortie_annuler', methods: ['POST'], requirements: ['id'=>'\d+']),]
+public function annulerSortie(Request $request, Sortie $sortie, EntityManagerInterface $entityManager): Response
+{
+    //Récupérer l'organisateur
+    $organisateur = $sortie->getOrganisateur()->getId();
+    //Récupérer utilisateur en cours
+    $UtilisateurEnCours = $this->getUser();
+    //Récupérer la sortie qu'on veut annuler
+    $sortieAnnuler = $sortie->getId();
+    //On a besoin du token
+    $token = $request->request->get('token');
+
+
+        if($UtilisateurEnCours != $organisateur && $sortie->getEtat()->getId() != 1){
+            return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
+        }
+        if(!$sortieAnnuler || !$this->isCsrfTokenValid()){
+
+            return  $this->redirectToRoute('app_sortie_index');
         }
 
-        return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
+        // Update l'état de la sortie
+        $sortie->setEtat(2);
+        $entityManager->persist($sortie);
+        $entityManager->flush();
+
+
+
+        return $this->redirectToRoute('app_sortie_index', []);
+
+
     }
 }
