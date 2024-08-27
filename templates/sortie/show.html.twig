@@ -42,5 +42,9 @@
 
     <a href="{{ path('app_sortie_edit', {'id': sortie.id}) }}">edit</a>
 
+    {% if sortie.dateLimiteInscription|date('U') > "now"|date('U') and sortie.nbInscriptionsMax > 0 and sortie.etat.id==2 %}
+        <a href="{{ path('app_sortie_inscription', {'id': sortie.id}) }}">S'inscrire</a>
+    {% endif %}
+
     {{ include('sortie/_delete_form.html.twig') }}
 {% endblock %}
