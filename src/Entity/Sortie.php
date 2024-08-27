@@ -31,7 +31,7 @@ class Sortie
     #[ORM\Column(nullable: true)]
     private ?int $nbInscriptionsMax = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $infosSortie = null;
 
     #[ORM\ManyToOne]
