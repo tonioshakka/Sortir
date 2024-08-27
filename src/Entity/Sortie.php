@@ -45,7 +45,7 @@ class Sortie
     #[Assert\Positive(message: 'Le nombre limite de participant doit être supérieur à 0')]
     private ?int $nbInscriptionsMax = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $infosSortie = null;
 
     #[ORM\ManyToOne]
