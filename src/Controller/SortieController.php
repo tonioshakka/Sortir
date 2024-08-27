@@ -2,14 +2,17 @@
 
 namespace App\Controller;
 
+use App\Entity\Etat;
 use App\Entity\Sortie;
 use App\Form\SortieType;
+use App\Repository\EtatRepository;
 use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[Route('/sortie')]
 class SortieController extends AbstractController
@@ -79,29 +82,42 @@ class SortieController extends AbstractController
 return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
 }
 
-#[Route('/annuler', name: 'app_sortie_annuler', methods: ['POST'], requirements: ['id'=>'\d+']),]
-public function annulerSortie(Request $request, Sortie $sortie, EntityManagerInterface $entityManager): Response
+#[Route('/annuler/{id}', name: 'app_sortie_annuler', methods: ['GET']),]
+public function annulerSortie(Request $request, Sortie $sortie, EntityManagerInterface $entityManager, SortieRepository $sortieRepository, EtatRepository $etatRepository): Response
 {
     //Récupérer l'organisateur
     $organisateur = $sortie->getOrganisateur()->getId();
+
+
     //Récupérer utilisateur en cours
-    $UtilisateurEnCours = $this->getUser();
+    $UtilisateurEnCours = $this->getUser()->getId();
+
+
     //Récupérer la sortie qu'on veut annuler
     $sortieAnnuler = $sortie->getId();
+
+
     //On a besoin du token
-    $token = $request->request->get('token');
+    $token = $request->get('token');
+
+    // Il faut un objet Etat pour le set dans la sortie
+    $etat = $etatRepository->find(2);
 
 
         if($UtilisateurEnCours != $organisateur && $sortie->getEtat()->getId() != 1){
             return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
         }
-        if(!$sortieAnnuler || !$this->isCsrfTokenValid()){
+        if(!$sortieAnnuler || !$this->isCsrfTokenValid('annuler'.$sortie->getId(), $token )){
 
-            return  $this->redirectToRoute('app_sortie_index');
+            return  $this->redirectToRoute('app_sortie_index',[],Response::HTTP_NOT_ACCEPTABLE);
+        }
+        if($sortie->getDateHeureDebut() == new \DateTime('now')){
+           return $this->redirectToRoute('app_sortie_index',[],Response::HTTP_NOT_ACCEPTABLE);
         }
 
         // Update l'état de la sortie
-        $sortie->setEtat(2);
+
+        $sortie->setEtat($etat);
         $entityManager->persist($sortie);
         $entityManager->flush();
 
