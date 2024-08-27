@@ -7,6 +7,9 @@ use App\Entity\Site;
 use App\Entity\Sortie;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -15,7 +18,7 @@ class ParticipantType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('email')
+            ->add('email', EmailType::class)
             ->add('roles', ChoiceType::class, [
                 'choices' =>[
                     'Admin' => 'ROLE_ADMIN',
@@ -24,7 +27,7 @@ class ParticipantType extends AbstractType
                     'multiple' => true,
                     'expanded' => true,
             ])
-            ->add('password')
+            ->add('password', passwordType::class)
             ->add('nom')
             ->add('prenom')
             ->add('telephone')
