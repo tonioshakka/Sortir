@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 
 #[ORM\Entity(repositoryClass: SortieRepository::class)]
 class Sortie
@@ -31,7 +32,7 @@ class Sortie
     #[ORM\Column(nullable: true)]
     private ?int $nbInscriptionsMax = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $infosSortie = null;
 
     #[ORM\ManyToOne]
