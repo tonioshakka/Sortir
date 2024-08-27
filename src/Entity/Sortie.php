@@ -2,16 +2,16 @@
 
 namespace App\Entity;
 
+use App\EventListener\SortieEntityListener;
 use App\Repository\SortieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: SortieRepository::class)]
-#[ORM\HasLifecycleCallbacks]
+#[ORM\EntityListeners([SortieEntityListener::class])]
 class Sortie
 {
     #[ORM\Id]
@@ -193,10 +193,9 @@ class Sortie
         return $this->organisateur;
     }
 
-    #[ORM\PrePersist]
-    public function setOrganisateur(Security $security): static
+    public function setOrganisateur(Participant $organisateur): static
     {
-        $this->organisateur = $security->getUser();
+        $this->organisateur = $organisateur;
 
         return $this;
     }
