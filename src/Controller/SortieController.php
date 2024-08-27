@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Participant;
 use App\Entity\Sortie;
+use App\Form\InscriptionType;
 use App\Form\SortieType;
 use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -71,11 +73,41 @@ class SortieController extends AbstractController
     #[Route('/{id}', name: 'app_sortie_delete', methods: ['POST'])]
     public function delete(Request $request, Sortie $sortie, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$sortie->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $sortie->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($sortie);
             $entityManager->flush();
         }
 
         return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/{id}/inscription', name: 'app_sortie_inscription', methods: ['GET','POST'])]
+    public function inscription(Request $request, Sortie $sortie, EntityManagerInterface $entityManager): Response
+    {
+        // Vérifier si la date limite d'inscription est dépassée
+        if ($sortie->getDateLimiteInscription() < new \DateTime()) {
+            $this->addFlash('error', 'La date limite d\'inscription est dépassée, dommage.');
+            return $this->redirectToRoute('app_sortie_show', ['id' => $sortie->getId()]);
+        }
+
+        // Vérifier si nombre maximal d'inscriptions
+        if (count($sortie->getParticipant()) >= $sortie->getNbInscriptionsMax()) {
+            $this->addFlash('error', 'Le nombre maximal de participants est atteint, désolé.');
+            return $this->redirectToRoute('app_sortie_show', ['id' => $sortie->getId()]);
+        }
+
+        // Ajouter le participant
+        $participant = $this->getUser();
+        if ($participant instanceof Participant) {
+            $sortie->addParticipant($participant);
+            $entityManager->persist($sortie);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Inscription réussie, passez un bon moment ;) .');
+        } else {
+            $this->addFlash('error', 'Erreur lors de l\'inscription, vous n\'avez pas été ajouté(e) à la sortie.');
+        }
+
+        return $this->redirectToRoute('app_sortie_index', ['id' => $sortie->getId()], Response::HTTP_SEE_OTHER);
     }
 }
