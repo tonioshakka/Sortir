@@ -7,8 +7,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: SortieRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Sortie
 {
     #[ORM\Id]
@@ -17,18 +20,29 @@ class Sortie
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'Vous devez nommer votre sortie')]
     private ?string $nom = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Assert\NotBlank(message: 'La date de début est requise')]
+    #[Assert\Type(Types::DATETIME_MUTABLE, message: "Le format de la date est invalide")]
+    #[Assert\GreaterThan('now', message: 'Le début de votre sortie doit se situer dabs le futur')]
     private ?\DateTimeInterface $dateHeureDebut = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\Type(Types::INTEGER, message: 'format de durée invalide')]
+    #[Assert\Positive(message: 'La durée doit être supérieure à 0')]
     private ?int $duree = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Assert\Type(Types::DATETIME_MUTABLE, message: 'Format de date invalide')]
+    #[Assert\LessThan(propertyPath: 'dateHeureDebut', message: 'La fin des inscriptions doit être anterieur à la date de début de la sortie')]
+    #[Assert\GreaterThan('now', message: 'La date limite d\'inscription doit se situer dabs le futur')]
     private ?\DateTimeInterface $dateLimiteInscription = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\Type(Types::INTEGER)]
+    #[Assert\Positive(message: 'Le nombre limite de participant doit être supérieur à 0')]
     private ?int $nbInscriptionsMax = null;
 
     #[ORM\Column(type: Types::TEXT)]
@@ -36,6 +50,7 @@ class Sortie
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotNull(message: 'Vous devez renseigner l\'état')]
     private ?Etat $etat = null;
 
     /**
@@ -47,6 +62,11 @@ class Sortie
     #[ORM\ManyToOne(inversedBy: 'mesSorties')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Participant $organisateur = null;
+
+    #[ORM\ManyToOne(inversedBy: 'sorties')]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotNull(message: 'Vous devez renseigner un lieu')]
+    private ?Lieu $lieu = null;
 
 
 
@@ -173,9 +193,22 @@ class Sortie
         return $this->organisateur;
     }
 
-    public function setOrganisateur(?Participant $organisateur): static
+    #[ORM\PrePersist]
+    public function setOrganisateur(Security $security): static
     {
-        $this->organisateur = $organisateur;
+        $this->organisateur = $security->getUser();
+
+        return $this;
+    }
+
+    public function getLieu(): ?Lieu
+    {
+        return $this->lieu;
+    }
+
+    public function setLieu(?Lieu $lieu): static
+    {
+        $this->lieu = $lieu;
 
         return $this;
     }
