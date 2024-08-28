@@ -48,6 +48,7 @@ class SortieType extends AbstractType
             ])
             ->add('lieuNew', LieuType::class, [
                 'label' => 'Ajouter un lieu',
+                'required' => false,
                 'mapped' => false,
                 'property_path' => 'lieu',
             ])
@@ -55,14 +56,6 @@ class SortieType extends AbstractType
                 $data = $event->getData();
                 $form = $event->getForm();
 
-                if (!empty($data['lieuNew']['name'])) {
-                    $form->remove('lieu');
-                    $form->add('lieuNew', LieuType::class, [
-                        'required' => true,
-                        'mapped' => true,
-                        'property_path' => 'lieuNew'
-                    ]);
-                }
             })
         ;
 

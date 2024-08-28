@@ -63,9 +63,9 @@ class Sortie
     #[ORM\JoinColumn(nullable: false)]
     private ?Participant $organisateur = null;
 
-    #[ORM\ManyToOne(inversedBy: 'sorties')]
+    #[ORM\ManyToOne(targetEntity: Lieu::class, cascade: ['persist'], inversedBy: 'sorties')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Assert\NotNull(message: 'Vous devez renseigner un lieu')]
+    #[Assert\Valid]
     private ?Lieu $lieu = null;
 
 
