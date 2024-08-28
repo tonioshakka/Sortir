@@ -17,6 +17,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
+
 #[Route('/sortie')]
 #[IsGranted("ROLE_USER")]
 class SortieController extends AbstractController
