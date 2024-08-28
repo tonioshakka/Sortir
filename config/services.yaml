@@ -21,4 +21,7 @@ services:
             - '../src/Kernel.php'
 
     # add more service definitions when explicit configuration is needed
+    App\EventListener\SortieEntityListener:
+        tags:
+            - { name: doctrine.orm.entity_listener }
     # please note that last definitions always *replace* previous ones
