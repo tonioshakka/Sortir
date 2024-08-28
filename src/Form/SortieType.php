@@ -8,6 +8,7 @@ use App\Entity\Sortie;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -24,15 +25,20 @@ class SortieType extends AbstractType
                 'widget' => 'single_text',
             ])
             ->add('duree', IntegerType::class, [
-                'label' => 'Durée en minutes'
+                'label' => 'Durée en minutes',
+                'required' => false,
             ])
             ->add('dateLimiteInscription', null, [
                 'widget' => 'single_text',
+                'required' => false,
             ])
             ->add('nbInscriptionsMax', IntegerType::class, [
                 'label' => 'Nombre de participants maximum',
+                'required' => false,
             ])
-            ->add('infosSortie')
+            ->add('infosSortie', TextareaType::class, [
+                'required' => false,
+            ])
             ->add('etat', EntityType::class, [
                 'class' => Etat::class,
                 'choice_label' => 'libelle',
