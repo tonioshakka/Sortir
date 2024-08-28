@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Annulation Sortie{% endblock %}
+
+{% block body %}
+    <h1>Annuler la sortie</h1>
+
+
+    {{ form_start(form) }}
+    {{ form_label('motif annulation') }}
+    {{ form_end(form) }}
+{#    {{ include('sortie/_form.html.twig', {'button_label': 'Update'}) }}#}
+    <a href="{{ path('app_sortie_index') }}">back to list</a>
+{#    {{ include('sortie/_delete_form.html.twig') }}#}
+
+{% endblock %}

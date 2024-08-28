@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Etat;
 use App\Entity\Sortie;
+use App\Form\AnnulationType;
 use App\Form\SortieType;
 use App\Repository\EtatRepository;
 use App\Repository\SortieRepository;
@@ -90,36 +91,38 @@ return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
      * @throws TransportExceptionInterface
      */
     #[Route('/annuler/{id}', name: 'app_sortie_annuler', methods: ['GET']),]
-public function annulerSortie(Request $request,
-                              Sortie $sortie,
-                              EntityManagerInterface $entityManager,
-                              EtatRepository $etatRepository,
-                              MailerInterface $mailer,
-    SortieRepository $sortieRepository,
+    public function annulerSortie(Request $request,
+                                  Sortie $sortie,
+                                  EntityManagerInterface $entityManager,
+                                  EtatRepository $etatRepository,
+                                  MailerInterface $mailer,
+                                  SortieRepository $sortieRepository,
 
-): Response
-{
-    //Récupérer l'organisateur
-    $organisateur = $sortie->getOrganisateur()->getId();
+    ): Response
+    {
 
-
-    //Récupérer utilisateur en cours
-    $UtilisateurEnCours = $this->getUser()->getId();
+        //Récupérer l'organisateur
+        $organisateur = $sortie->getOrganisateur()->getId();
 
 
-    //Récupérer la sortie qu'on veut annuler
-    $sortieAnnuler = $sortie->getId();
+        //Récupérer utilisateur en cours
+        $UtilisateurEnCours = $this->getUser()->getId();
 
 
-    //On a besoin du token
-    $token = $request->get('token');
+        //Récupérer la sortie qu'on veut annuler
+        $sortieAnnuler = $sortie->getId();
 
 
-    // Il faut un objet Etat pour le set dans la sortie
-    $etat = $etatRepository->find(2);
+        //On a besoin du token
+        $token = $request->get('token');
 
-    //Avoir le nombre de participant a un événement
-    $countParticipant = $sortie->getParticipant()->count();
+
+        // Il faut un objet Etat pour le set dans la sortie
+        $etat = $etatRepository->find(2);
+
+        //Avoir le nombre de participant a un événement
+        $countParticipant = $sortie->getParticipant()->count();
+
 
 
         if($UtilisateurEnCours != $organisateur && $sortie->getEtat()->getId() != 1){
@@ -132,17 +135,17 @@ public function annulerSortie(Request $request,
             return  $this->redirectToRoute('app_sortie_index',[],Response::HTTP_CONFLICT);
         }
 
-        if($sortie->getDateHeureDebut() == new \DateTime('now')){
-           return $this->redirectToRoute('app_sortie_index',[],Response::HTTP_I_AM_A_TEAPOT);
+        if($sortie->getDateHeureDebut() >= new \DateTime('now')){
+            return $this->redirectToRoute('app_sortie_index',[],Response::HTTP_I_AM_A_TEAPOT);
         }
 
         // Update l'état de la sortie, désinscrit les participants et on leur envoi un mail.
         if($countParticipant >= 1){
+            $sortie->setEtat($etat);
             foreach ($sortie->getParticipant() as $gens){
-                $sortie->setEtat($etat);
+
                 $sortie->removeParticipant($gens);
-                $entityManager->persist($sortie);
-                $entityManager->flush();
+
 
                 $email = (new TemplatedEmail())
                     ->from('test@glandu.com')
@@ -156,6 +159,8 @@ public function annulerSortie(Request $request,
 
                 $mailer->send($email);
             }
+            $entityManager->persist($sortie);
+            $entityManager->flush();
 
             return $this->redirectToRoute('app_sortie_index',[]);
         }
@@ -164,6 +169,28 @@ public function annulerSortie(Request $request,
 
     }
 
+
+#[Route('/motif/{id}', name: 'app_sortie_form_annuler', methods: ['GET'])]
+    public function formAnnuler(Request $request, Sortie $sortie, EntityManagerInterface $entityManager): Response
+    {
+        $form = $this->createForm(SortieType::class, $sortie);
+        $form->handleRequest($request);
+        $token = $request->get('token');
+        if ($form->isSubmitted() && $this->isCsrfTokenValid('annuler'.$sortie->getId(), $token)) {
+            $entityManager->persist($sortie);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'votre sortie a été annulée');
+
+            return $this->redirectToRoute('app_sortie_annuler', [
+                'id' => $sortie->getId(),
+                'token' => $request->get('token'),
+            ]);
+        }
+//        $this->addFlash('error', 'Echec annulation ');
+//
+        return $this->render('sortie/annuler.html.twig', []);
+    }
 
 }
 

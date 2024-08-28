@@ -48,6 +48,9 @@ class Sortie
     #[ORM\JoinColumn(nullable: false)]
     private ?Participant $organisateur = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $motifAnnuler = null;
+
 
 
     public function __construct()
@@ -176,6 +179,18 @@ class Sortie
     public function setOrganisateur(?Participant $organisateur): static
     {
         $this->organisateur = $organisateur;
+
+        return $this;
+    }
+
+    public function getMotifAnnuler(): ?string
+    {
+        return $this->motifAnnuler;
+    }
+
+    public function setMotifAnnuler(?string $motifAnnuler): static
+    {
+        $this->motifAnnuler = $motifAnnuler;
 
         return $this;
     }
