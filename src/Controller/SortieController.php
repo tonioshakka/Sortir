@@ -8,9 +8,13 @@ use App\Form\SortieType;
 use App\Repository\EtatRepository;
 use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -82,8 +86,18 @@ class SortieController extends AbstractController
 return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
 }
 
-#[Route('/annuler/{id}', name: 'app_sortie_annuler', methods: ['GET']),]
-public function annulerSortie(Request $request, Sortie $sortie, EntityManagerInterface $entityManager, SortieRepository $sortieRepository, EtatRepository $etatRepository): Response
+    /**
+     * @throws TransportExceptionInterface
+     */
+    #[Route('/annuler/{id}', name: 'app_sortie_annuler', methods: ['GET']),]
+public function annulerSortie(Request $request,
+                              Sortie $sortie,
+                              EntityManagerInterface $entityManager,
+                              EtatRepository $etatRepository,
+                              MailerInterface $mailer,
+    SortieRepository $sortieRepository,
+
+): Response
 {
     //Récupérer l'organisateur
     $organisateur = $sortie->getOrganisateur()->getId();
@@ -100,19 +114,26 @@ public function annulerSortie(Request $request, Sortie $sortie, EntityManagerInt
     //On a besoin du token
     $token = $request->get('token');
 
+
     // Il faut un objet Etat pour le set dans la sortie
     $etat = $etatRepository->find(2);
+
+    //Avoir le nombre de participant a un événement
+    $countParticipant = $sortie->getParticipant()->count();
 
 
         if($UtilisateurEnCours != $organisateur && $sortie->getEtat()->getId() != 1){
             return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
         }
-        if(!$sortieAnnuler || !$this->isCsrfTokenValid('annuler'.$sortie->getId(), $token )){
 
-            return  $this->redirectToRoute('app_sortie_index',[],Response::HTTP_NOT_ACCEPTABLE);
+        if(!$sortieAnnuler || !$this->isCsrfTokenValid('annuler'.$sortie->getId(), $token)){
+
+
+            return  $this->redirectToRoute('app_sortie_index',[],Response::HTTP_CONFLICT);
         }
+
         if($sortie->getDateHeureDebut() == new \DateTime('now')){
-           return $this->redirectToRoute('app_sortie_index',[],Response::HTTP_NOT_ACCEPTABLE);
+           return $this->redirectToRoute('app_sortie_index',[],Response::HTTP_I_AM_A_TEAPOT);
         }
 
         // Update l'état de la sortie
@@ -121,10 +142,28 @@ public function annulerSortie(Request $request, Sortie $sortie, EntityManagerInt
         $entityManager->persist($sortie);
         $entityManager->flush();
 
+        if($countParticipant = 1){
+            foreach ($sortie->getParticipant() as $gens){
+                $email = (new TemplatedEmail())
+                    ->from('test@glandu.com')
+                    ->to($gens->getEmail())
+                    ->htmlTemplate('sortie/email/sortieAnnuler.html.twig')
+                    ->context([
+                        'sortie' => $sortie,
+                        'participant' => $gens
 
+                    ]);
+
+                $mailer->send($email);
+            }
+
+            return $this->redirectToRoute('app_sortie_index',[]);
+        }
 
         return $this->redirectToRoute('app_sortie_index', []);
 
-
     }
+
+
 }
+
