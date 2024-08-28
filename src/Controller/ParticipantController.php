@@ -92,6 +92,7 @@ class ParticipantController extends AbstractController
 
         return $this->redirectToRoute('app_participant_index', [], Response::HTTP_SEE_OTHER);
     }
+
     #[Route('/inactif/{id}', name: 'app_participant_inactif', methods: ['POST'])]
     public function inactif(Request $request, Participant $participant, EntityManagerInterface $entityManager): Response
     {
@@ -102,4 +103,7 @@ class ParticipantController extends AbstractController
 
         return $this->redirectToRoute('app_participant_index', [], Response::HTTP_SEE_OTHER);
     }
+
+
+
 }
