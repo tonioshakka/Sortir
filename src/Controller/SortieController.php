@@ -136,14 +136,14 @@ public function annulerSortie(Request $request,
            return $this->redirectToRoute('app_sortie_index',[],Response::HTTP_I_AM_A_TEAPOT);
         }
 
-        // Update l'état de la sortie
-
-        $sortie->setEtat($etat);
-        $entityManager->persist($sortie);
-        $entityManager->flush();
-
-        if($countParticipant = 1){
+        // Update l'état de la sortie, désinscrit les participants et on leur envoi un mail.
+        if($countParticipant >= 1){
             foreach ($sortie->getParticipant() as $gens){
+                $sortie->setEtat($etat);
+                $sortie->removeParticipant($gens);
+                $entityManager->persist($sortie);
+                $entityManager->flush();
+
                 $email = (new TemplatedEmail())
                     ->from('test@glandu.com')
                     ->to($gens->getEmail())
