@@ -5,14 +5,17 @@ namespace App\Controller;
 use App\Entity\Participant;
 use App\Form\ParticipantType;
 use App\Repository\ParticipantRepository;
+use App\Service\EnvoiMail;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/participant')]
+#[IsGranted("ROLE_USER")]
 class ParticipantController extends AbstractController
 {
     #[Route('/', name: 'app_participant_index', methods: ['GET'])]
@@ -24,17 +27,23 @@ class ParticipantController extends AbstractController
     }
 
     #[Route('/new', name: 'app_participant_new', methods: ['GET', 'POST'])]
-    public function new(Request $request,UserPasswordHasherInterface $passwordHasher  ,EntityManagerInterface $entityManager): Response
+    public function new(Request $request,UserPasswordHasherInterface $passwordHasher,EnvoiMail $envoiMail  ,EntityManagerInterface $entityManager): Response
     {
         $participant = new Participant();
-        $form = $this->createForm(ParticipantType::class, $participant);
+        $form = $this->createForm(ParticipantType::class, $participant, [
+            'password_field' => false,
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $hashedPassword = $passwordHasher->hashPassword($participant, $form->get('password')->getData());
+            $leMotDePasse = 'MotDePasseParDefault2024';
+            $message = 'Penser a changer votre mot passe l\'or de votre premier connection, votre mot de passe par default est : ';
+            $hashedPassword = $passwordHasher->hashPassword($participant, $leMotDePasse);
             $participant->setPassword($hashedPassword);
             $entityManager->persist($participant);
             $entityManager->flush();
+
+            $envoiMail->EnvoiMailCreationCompte($participant->getEmail(),$leMotDePasse,$message);
 
             return $this->redirectToRoute('app_participant_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -73,11 +82,21 @@ class ParticipantController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_participant_delete', methods: ['POST'])]
+    #[Route('/delete/{id}', name: 'app_participant_delete', methods: ['POST'])]
     public function delete(Request $request, Participant $participant, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$participant->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($participant);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('app_participant_index', [], Response::HTTP_SEE_OTHER);
+    }
+    #[Route('/inactif/{id}', name: 'app_participant_inactif', methods: ['POST'])]
+    public function inactif(Request $request, Participant $participant, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('inactif'.$participant->getId(), $request->getPayload()->getString('_token'))) {
+            $participant->setActif(false);
             $entityManager->flush();
         }
 
