@@ -7,38 +7,34 @@
 
     <table class="table">
         <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ participant.id }}</td>
-            </tr>
-            <tr>
-                <th>Email</th>
-                <td>{{ participant.email }}</td>
-            </tr>
-            <tr>
-                <th>Roles</th>
-                <td>{{ participant.roles ? participant.roles|json_encode : '' }}</td>
-            </tr>
-            <tr>
-                <th>Password</th>
-                <td>{{ participant.password }}</td>
-            </tr>
-            <tr>
-                <th>Nom</th>
-                <td>{{ participant.nom }}</td>
-            </tr>
-            <tr>
-                <th>Prenom</th>
-                <td>{{ participant.prenom }}</td>
-            </tr>
-            <tr>
-                <th>Telephone</th>
-                <td>{{ participant.telephone }}</td>
-            </tr>
-            <tr>
-                <th>Actif</th>
-                <td>{{ participant.actif ? 'Yes' : 'No' }}</td>
-            </tr>
+        <tr>
+            <th>Id</th>
+            <td>{{ participant.id }}</td>
+        </tr>
+        <tr>
+            <th>Email</th>
+            <td>{{ participant.email }}</td>
+        </tr>
+        <tr>
+            <th>Roles</th>
+            <td>{{ participant.roles ? participant.roles|json_encode : '' }}</td>
+        </tr>
+        <tr>
+            <th>Nom</th>
+            <td>{{ participant.nom }}</td>
+        </tr>
+        <tr>
+            <th>Prenom</th>
+            <td>{{ participant.prenom }}</td>
+        </tr>
+        <tr>
+            <th>Telephone</th>
+            <td>{{ participant.telephone }}</td>
+        </tr>
+        <tr>
+            <th>Actif</th>
+            <td>{{ participant.actif ? 'Yes' : 'No' }}</td>
+        </tr>
         </tbody>
     </table>
 
