@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/participant')]
@@ -23,13 +24,15 @@ class ParticipantController extends AbstractController
     }
 
     #[Route('/new', name: 'app_participant_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request,UserPasswordHasherInterface $passwordHasher  ,EntityManagerInterface $entityManager): Response
     {
         $participant = new Participant();
         $form = $this->createForm(ParticipantType::class, $participant);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $hashedPassword = $passwordHasher->hashPassword($participant, $form->get('password')->getData());
+            $participant->setPassword($hashedPassword);
             $entityManager->persist($participant);
             $entityManager->flush();
 
@@ -51,12 +54,14 @@ class ParticipantController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_participant_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Participant $participant, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Participant $participant,UserPasswordHasherInterface $passwordHasher ,EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(ParticipantType::class, $participant);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $hashedPassword = $passwordHasher->hashPassword($participant, $form->get('password')->getData());
+            $participant->setPassword($hashedPassword);
             $entityManager->flush();
 
             return $this->redirectToRoute('app_participant_index', [], Response::HTTP_SEE_OTHER);
@@ -78,4 +83,5 @@ class ParticipantController extends AbstractController
 
         return $this->redirectToRoute('app_participant_index', [], Response::HTTP_SEE_OTHER);
     }
+
 }
