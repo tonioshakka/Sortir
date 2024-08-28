@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\Lieu;
 use App\Entity\Participant;
 use App\Entity\Sortie;
 use App\Form\InscriptionType;
@@ -72,14 +71,29 @@ class SortieController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_sortie_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Sortie $sortie, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Sortie $sortie, EntityManagerInterface $entityManager, ValidatorInterface $validator): Response
     {
         $form = $this->createForm(SortieType::class, $sortie);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
+            if (!$form->getdata()->getLieu()) {
+                $lieu = $form->get('lieuNew')->getData();
+                $errors = $validator->validate($lieu);
+                if (count($errors) > 0) {
+                    foreach ($errors as $error) {
+                        $form->addError(new FormError($error->getMessage()));
+                    }
+                    return $this->render('sortie/edit.html.twig', [
+                        'sortie' => $sortie,
+                        'form' => $form,
+                    ]);
+                }
+                $sortie->setLieu($lieu);
+            }
 
+            $entityManager->persist($sortie);
+            $entityManager->flush();
             return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
         }
 
