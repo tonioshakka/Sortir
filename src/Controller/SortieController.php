@@ -79,7 +79,7 @@ class SortieController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_sortie_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Sortie $sortie, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Sortie $sortie, EntityManagerInterface $entityManager, ValidatorInterface $validator): Response
     {
         $form = $this->createForm(SortieType::class, $sortie);
         $form->handleRequest($request);
@@ -222,6 +222,9 @@ class SortieController extends AbstractController
     ): Response
     {
 
+        $form = $this->createForm(SortieType::class, $sortie);
+        $form->handleRequest($request);
+
         //Récupérer l'organisateur
         $organisateur = $sortie->getOrganisateur()->getId();
 
@@ -256,7 +259,7 @@ class SortieController extends AbstractController
             return  $this->redirectToRoute('app_sortie_index',[],Response::HTTP_CONFLICT);
         }
 
-        if($sortie->getDateHeureDebut() >= new \DateTime('now')){
+        if($sortie->getDateHeureDebut() == new \DateTime('now')){
             return $this->redirectToRoute('app_sortie_index',[],Response::HTTP_I_AM_A_TEAPOT);
         }
 
@@ -291,17 +294,22 @@ class SortieController extends AbstractController
     }
 
 
-#[Route('/motif/{id}', name: 'app_sortie_form_annuler', methods: ['GET'])]
+#[Route('/motif/{id}', name: 'app_sortie_form_annuler', methods: ['GET','POST'])]
     public function formAnnuler(Request $request, Sortie $sortie, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(SortieType::class, $sortie);
+        $form = $this->createForm(AnnulationType::class, $sortie, [
+            'method' => 'POST',
+        ]);
         $form->handleRequest($request);
         $token = $request->get('token');
-        if ($form->isSubmitted() && $this->isCsrfTokenValid('annuler'.$sortie->getId(), $token)) {
+        if ($form->isSubmitted()) {
             $entityManager->persist($sortie);
             $entityManager->flush();
 
             $this->addFlash('success', 'votre sortie a été annulée');
+
+
+
 
             return $this->redirectToRoute('app_sortie_annuler', [
                 'id' => $sortie->getId(),
@@ -310,7 +318,9 @@ class SortieController extends AbstractController
         }
 //        $this->addFlash('error', 'Echec annulation ');
 //
-        return $this->render('sortie/annuler.html.twig', []);
+        return $this->render('sortie/annuler.html.twig', [
+            'form'=> $form
+        ]);
     }
 
 }
