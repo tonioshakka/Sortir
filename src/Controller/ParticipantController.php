@@ -8,6 +8,7 @@ use App\Repository\ParticipantRepository;
 use App\Service\EnvoiMail;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -23,6 +24,16 @@ class ParticipantController extends AbstractController
     {
         return $this->render('participant/index.html.twig', [
             'participants' => $participantRepository->findAll(),
+        ]);
+    }
+
+    #[Route('/profil', name: 'app_participant_profil')]
+    public function profil(Security $security): Response
+    {
+        $participant = $security->getUser();
+
+        return $this->render('profil.html.twig', [
+            'participant' => $participant,
         ]);
     }
 

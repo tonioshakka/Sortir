@@ -3,6 +3,18 @@
 {% block title %}Sortie index{% endblock %}
 
 {% block body %}
+
+
+
+
+
+
+
+
+
+
+
+
     <h1>Sortie index</h1>
 
     {% for label, messages in app.flashes %}
@@ -29,7 +41,7 @@
         {% for sortie in sorties %}
             <tr>
                 <td>{{ sortie.id }}</td>
-                <td>{{ sortie.nom }}</td>
+                <td><a href="{{ path('app_sortie_show', {'id': sortie.id}) }}">{{ sortie.nom }}</a></td>
                 <td>{{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ sortie.duree }}</td>
                 <td>{{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date('Y-m-d H:i:s') : '' }}</td>
