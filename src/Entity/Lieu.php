@@ -16,26 +16,25 @@ class Lieu
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: false)]
     #[Assert\NotBlank(message: 'Vous devez indiquer le lieu de votre sortie')]
     private ?string $nom = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: false)]
     #[Assert\NotBlank(message: 'La rue est requise')]
     private ?string $rue = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: false)]
     #[Assert\NotBlank(message: 'La latitude est requise')]
     private ?float $latitude = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: false)]
     #[Assert\NotBlank(message: 'La longitude est requise')]
     private ?float $longitude = null;
 
-    #[ORM\ManyToOne(inversedBy: 'lieux')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\Column(nullable: false)]
     #[Assert\NotNull(message: 'vous devez inquez la ville')]
-    private ?Ville $ville = null;
+    private ?string $ville = null;
 
     /**
      * @var Collection<int, Sortie>
@@ -101,12 +100,12 @@ class Lieu
         return $this;
     }
 
-    public function getVille(): ?Ville
+    public function getVille(): ?string
     {
         return $this->ville;
     }
 
-    public function setVille(?Ville $ville): static
+    public function setVille(?string $ville): static
     {
         $this->ville = $ville;
 
