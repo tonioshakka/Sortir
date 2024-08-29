@@ -10,6 +10,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -27,7 +28,6 @@ class ParticipantType extends AbstractType
                     'multiple' => true,
                     'expanded' => true,
             ])
-            ->add('password', passwordType::class)
             ->add('nom')
             ->add('prenom')
             ->add('telephone')
@@ -35,14 +35,26 @@ class ParticipantType extends AbstractType
             ->add('site', EntityType::class, [
                 'class' => Site::class,
                 'choice_label' => 'id',
-            ])
-        ;
+            ]);
+        if ($options['password_field']) {
+            $builder->add('password', RepeatedType::class, [
+                'type' => PasswordType::class,
+                'required' => false,
+                'mapped' => true,
+                'label' => 'Password',
+                'attr' => ['autocomplete' => 'new-password'],
+                'invalid_message' => 'Le mot de passe ne correspond pas',
+                'first_options' => ['label' => 'Mot de passe'],
+                'second_options' => ['label' => 'Confirmer le mot de passe'],
+            ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Participant::class,
+            'password_field' => true,
         ]);
     }
 }
