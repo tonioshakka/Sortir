@@ -14,34 +14,8 @@
         {% endblock %}
     </head>
     <body>
-    <h1><img src="{{ asset('img/logo.png') }}" alt=""></h1>
-    <nav>
-        <ul>
-            {% if is_granted('IS_AUTHENTICATED') %}
-
-{#                  lIENS à TERMINER     #}
-{#                {% if is_granted('ROLE_ADMIN') %}#}
-{#                <li style="padding: 5px;"><a href="{{  path('') }}">Villes</a></li>#}
-{#                <li style="padding: 5px;"><a href="{{  path('') }}">Sites</a></li>#}
-{#                {% endif %}#}
-
-                <li style="padding: 5px;"><a href="{{  path('app_sortie_index') }}">Accueil</a></li>
-
-                <li><a href="{{ path('app_participant_show', {'id': app.user.id}) }}">Mon profil</a></li>
-
-
-                    <li style="padding: 5px;"><a href="{{  path('app_logout') }}">Je m'en vais BYE BYE les nazes</a></li>
-                {% else %}
-                    <li style="padding: 5px;"><a href="{{  path('app_login') }}">STP Laisse moi rentrer</a></li>
-            {% endif %}
-        </ul>
-    </nav>
-
-    {{ "now"|date('d/m/Y') }}
-
-
-
-
+        {{ include('elements/nav_bar.html.twig') }}
         {% block body %}{% endblock %}
+        {{ include('elements/footer.html.twig') }}
     </body>
 </html>
