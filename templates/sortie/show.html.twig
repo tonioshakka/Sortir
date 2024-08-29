@@ -19,10 +19,7 @@
                 <th>DateHeureDebut</th>
                 <td>{{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('Y-m-d H:i:s') : '' }}</td>
             </tr>
-            <tr>
-                <th>Duree</th>
-                <td>{{ sortie.duree }}</td>
-            </tr>
+
             <tr>
                 <th>DateLimiteInscription</th>
                 <td>{{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date('Y-m-d H:i:s') : '' }}</td>
@@ -57,7 +54,7 @@
 
     {{ include('sortie/_delete_form.html.twig') }}
 
-    <h2>Participants</h2>
+    <h2>Participants inscrits</h2>
     <ul>
         {% for participant in sortie.participant %}
             <li>

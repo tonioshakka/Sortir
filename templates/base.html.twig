@@ -12,6 +12,14 @@
         {% endblock %}
     </head>
     <body>
+    <h1><img src="{{ asset('img/logo.png') }}" alt=""></h1>
+   
+    {{ "now"|date('d/m/Y') }}
+
+
+
+
+
         {{ include('elements/nav_bar.html.twig') }}
         {% block body %}{% endblock %}
         {{ include('elements/footer.html.twig') }}

@@ -2,13 +2,13 @@
 
 namespace App\Controller;
 
-use App\Entity\Etat;
 use App\Entity\Participant;
 use App\Entity\Sortie;
 use App\Form\AnnulationType;
-use App\Form\InscriptionType;
 use App\Form\SortieType;
+use App\Form\TriSortieType;
 use App\Repository\EtatRepository;
+use App\Repository\SiteRepository;
 use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -18,9 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -29,11 +27,32 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 #[IsGranted("ROLE_USER")]
 class SortieController extends AbstractController
 {
-    #[Route('/', name: 'app_sortie_index', methods: ['GET'])]
-    public function index(SortieRepository $sortieRepository): Response
+    #[Route('/', name: 'app_sortie_index', methods: ['GET', 'POST'])]
+    public function triSorties(Request $request, SortieRepository $sortieRepository, SiteRepository $siteRepository): Response
     {
+        $user = $this->getUser();
+        $userSite = $user?->getSite();
+
+        $form = $this->createForm(TriSortieType::class, null, [
+            'default_site' => $userSite,
+        ]);
+        $form->handleRequest($request);
+
+        $sorties = [];
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+
+            // Effectuer la recherche/tri des sorties basées sur les critères du formulaire
+            $sorties = $sortieRepository->findByCriteria($data, $user);
+        } else {
+            // Si aucun tri n'est effectué, on récupère toutes les sorties
+            $sorties = $sortieRepository->findAll();
+        }
+
         return $this->render('sortie/index.html.twig', [
-            'sorties' => $sortieRepository->findAll(),
+            'sorties' => $sorties,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -324,7 +343,4 @@ class SortieController extends AbstractController
             'form'=> $form
         ]);
     }
-
 }
-
-
