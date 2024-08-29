@@ -5,10 +5,14 @@ namespace App\Entity;
 use App\Repository\LieuRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Schema\UniqueConstraint;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: LieuRepository::class)]
+#[ORM\UniqueConstraint(columns:['nom','longitude','latitude'],name: 'lieu')]
+#[UniqueEntity(fields: ['nom','longitude','latitude'], message: 'Ce lieu existe déjà')]
 class Lieu
 {
     #[ORM\Id]

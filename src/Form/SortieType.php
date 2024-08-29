@@ -19,7 +19,9 @@ class SortieType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+
         $builder
+
             ->add('nom')
             ->add('dateHeureDebut', null, [
                 'widget' => 'single_text',
@@ -42,13 +44,14 @@ class SortieType extends AbstractType
             ->add('etat', EntityType::class, [
                 'class' => Etat::class,
                 'choice_label' => 'libelle',
+                'choice_label' => 'libelle',
                 'placeholder' => 'Selectionner une etat',
             ])
             ->add('lieu', EntityType::class, [
                 'class' => Lieu::class,
                 'required' => false,
                 'choice_label' => function($lieu) {
-                return $lieu->getNom() . ' - ' . $lieu->getRue() . ' - ' . $lieu->getVille()->getNom();
+                return $lieu->getNom() . ' - ' . $lieu->getRue() . ' - ' . $lieu->getVille();
                 },
                 'placeholder' => '-- Selectionner une lieu --',
             ])
@@ -64,7 +67,6 @@ class SortieType extends AbstractType
 
             })
         ;
-
     }
 
     public function configureOptions(OptionsResolver $resolver): void

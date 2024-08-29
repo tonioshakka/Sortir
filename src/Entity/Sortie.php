@@ -3,15 +3,19 @@
 namespace App\Entity;
 
 use App\EventListener\SortieEntityListener;
+use App\Repository\EtatRepository;
 use App\Repository\SortieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: SortieRepository::class)]
 #[ORM\EntityListeners([SortieEntityListener::class])]
+#[ORM\UniqueConstraint(columns: ['nom', 'date_heure_debut','organisateur_id'])]
+#[UniqueEntity(fields: ['nom', 'date_heure_debut','organisateur_id'], message: 'Cette sortie existe déjà')]
 class Sortie
 {
     #[ORM\Id]
@@ -68,6 +72,9 @@ class Sortie
     #[Assert\NotNull(message: 'Vous devez renseigner un lieu')]
     private ?Lieu $lieu = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $motifAnnuler = null;
+
 
 
     public function __construct()
@@ -94,6 +101,7 @@ class Sortie
 
     public function getDateHeureDebut(): ?\DateTimeInterface
     {
+
         return $this->dateHeureDebut;
     }
 
@@ -208,6 +216,18 @@ class Sortie
     public function setLieu(?Lieu $lieu): static
     {
         $this->lieu = $lieu;
+
+        return $this;
+    }
+
+    public function getMotifAnnuler(): ?string
+    {
+        return $this->motifAnnuler;
+    }
+
+    public function setMotifAnnuler(?string $motifAnnuler): static
+    {
+        $this->motifAnnuler = $motifAnnuler;
 
         return $this;
     }
