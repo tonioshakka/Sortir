@@ -16,9 +16,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\EntityListeners([SortieEntityListener::class])]
 #[ORM\UniqueConstraint(columns: ['nom', 'date_heure_debut','organisateur_id'])]
 #[UniqueEntity(fields: ['nom', 'date_heure_debut','organisateur_id'], message: 'Cette sortie existe déjà')]
-//organisateur, nom, date Unicité
-
-
 class Sortie
 {
     #[ORM\Id]

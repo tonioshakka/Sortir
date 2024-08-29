@@ -13,8 +13,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: LieuRepository::class)]
 #[ORM\UniqueConstraint(columns:['nom','longitude','latitude'],name: 'lieu')]
 #[UniqueEntity(fields: ['nom','longitude','latitude'], message: 'Ce lieu existe déjà')]
-//lieu unicité : nom et gps
-
 class Lieu
 {
     #[ORM\Id]

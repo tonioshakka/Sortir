@@ -51,7 +51,7 @@ class SortieType extends AbstractType
                 'class' => Lieu::class,
                 'required' => false,
                 'choice_label' => function($lieu) {
-                return $lieu->getNom() . ' - ' . $lieu->getRue() . ' - ' . $lieu->getVille()->getNom();
+                return $lieu->getNom() . ' - ' . $lieu->getRue() . ' - ' . $lieu->getVille();
                 },
                 'placeholder' => '-- Selectionner une lieu --',
             ])
