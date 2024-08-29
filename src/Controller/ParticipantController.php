@@ -6,6 +6,7 @@ use App\Entity\Participant;
 use App\Form\ParticipantType;
 use App\Repository\ParticipantRepository;
 use App\Service\EnvoiMail;
+use App\Service\GenerateurDeMotDePasse;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -16,10 +17,10 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/participant')]
-#[IsGranted("ROLE_USER")]
 class ParticipantController extends AbstractController
 {
     #[Route('/', name: 'app_participant_index', methods: ['GET'])]
+    #[IsGranted("ROLE_ADMIN")]
     public function index(ParticipantRepository $participantRepository): Response
     {
         return $this->render('participant/index.html.twig', [
@@ -38,7 +39,8 @@ class ParticipantController extends AbstractController
     }
 
     #[Route('/new', name: 'app_participant_new', methods: ['GET', 'POST'])]
-    public function new(Request $request,UserPasswordHasherInterface $passwordHasher,EnvoiMail $envoiMail  ,EntityManagerInterface $entityManager): Response
+    #[IsGranted("ROLE_ADMIN")]
+    public function new(Request $request,UserPasswordHasherInterface $passwordHasher,EnvoiMail $envoiMail, GenerateurDeMotDePasse $generateurDeMotDePasse  ,EntityManagerInterface $entityManager): Response
     {
         $participant = new Participant();
         $form = $this->createForm(ParticipantType::class, $participant, [
@@ -47,7 +49,7 @@ class ParticipantController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $leMotDePasse = 'MotDePasseParDefault2024';
+            $leMotDePasse = $generateurDeMotDePasse->genererUnMotDePasse(8);
             $message = 'Penser a changer votre mot passe l\'or de votre premier connection, votre mot de passe par default est : ';
             $hashedPassword = $passwordHasher->hashPassword($participant, $leMotDePasse);
             $participant->setPassword($hashedPassword);
@@ -66,6 +68,7 @@ class ParticipantController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_participant_show', methods: ['GET'])]
+    #[IsGranted("ROLE_USER")]
     public function show(Participant $participant): Response
     {
         return $this->render('participant/show.html.twig', [
@@ -74,9 +77,12 @@ class ParticipantController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_participant_edit', methods: ['GET', 'POST'])]
+    #[IsGranted("ROLE_USER")]
     public function edit(Request $request, Participant $participant,UserPasswordHasherInterface $passwordHasher ,EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(ParticipantType::class, $participant);
+        $form = $this->createForm(ParticipantType::class, $participant, [
+            'email_field' => false,
+            ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -94,6 +100,7 @@ class ParticipantController extends AbstractController
     }
 
     #[Route('/delete/{id}', name: 'app_participant_delete', methods: ['POST'])]
+    #[IsGranted("ROLE_ADMIN")]
     public function delete(Request $request, Participant $participant, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$participant->getId(), $request->getPayload()->getString('_token'))) {
@@ -105,6 +112,7 @@ class ParticipantController extends AbstractController
     }
 
     #[Route('/inactif/{id}', name: 'app_participant_inactif', methods: ['POST'])]
+    #[IsGranted("ROLE_USER")]
     public function inactif(Request $request, Participant $participant, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('inactif'.$participant->getId(), $request->getPayload()->getString('_token'))) {
