@@ -20,7 +20,7 @@ class TriSortieType extends AbstractType
             ->add('site', EntityType::class, [
                 'class' => Site::class,
                 'choice_label' => 'nom',
-                'placeholder' => $options['default_site'] ?? 'Sélectionner un site',
+                'placeholder' => $options['default_site'] || 'Sélectionner un site',
                 'required' => false,
             ])
             ->add('search', SearchType::class, [

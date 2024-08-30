@@ -3,41 +3,28 @@
 {% block title %}Sortie{% endblock %}
 
 {% block body %}
-    <h1>Sortie</h1>
+    <h2>{{ sortie.nom }}</h2>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ sortie.id }}</td>
-            </tr>
-            <tr>
-                <th>Nom</th>
-                <td>{{ sortie.nom }}</td>
-            </tr>
-            <tr>
-                <th>DateHeureDebut</th>
-                <td>{{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-
-            <tr>
-                <th>DateLimiteInscription</th>
-                <td>{{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>NbInscriptionsMax</th>
-                <td>{{ sortie.nbInscriptionsMax }}</td>
-            </tr>
-            <tr>
-                <th>InfosSortie</th>
-                <td>{{ sortie.infosSortie }}</td>
-            </tr>
-            <tr>
-                <th>Organisateur</th>
-                <td>{{ sortie.organisateur.nom }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="sortie-info">
+        <ul id="sortie_data">
+            <li class="sortie-data"><span class="sortie-field">Date et Heure :</span><span class="sortie-value">{{ sortie.dateHeureDebut | date('d/m/Y H\hi') }}</span></li>
+            <li class="sortie-data"><span class="sortie-field"></span>ville :<span class="sortie-value">{{ sortie.lieu.ville }}</span></li>
+            <li class="sortie-data"><span class="sortie-field">rue :</span><span class="sortie-value"> {{ sortie.lieu.rue }}</span></li>
+            {% if sortie.dateLimiteInscription %}
+                <li class="sortie-data"><span class="sortie-field"></span>Clôture<span class="sortie-value">{{ sortie.dateLimiteInscription }}</span></li>
+            {% endif %}
+            {% if sortie.nbInscriptionsMax %}
+                <li class="sortie-data"><span class="sortie-field"></span>Nombre de places :<span class="sortie-value">{{ sortie.nbInscriptionsMax }}</span></li>
+            {% endif %}
+            {% if sortie.duree %}
+                <li class="sortie-data"><span class="sortie-field"></span>Durée :<span class="sortie-value">{{ sortie.duree }}</span></li>
+            {% endif %}
+        </ul>
+        {% if sortie.infosSortie %}
+            <h3>Description et info</h3>
+            <p>{{ sortie.infosSortie or sortie.motifAnnuler }}</p>
+        {% endif %}
+    </div>
 
     <a href="{{ path('app_sortie_index') }}">Retour à la liste</a>
     <a href="{{ path('app_sortie_edit', {'id': sortie.id}) }}">Éditer</a>
@@ -54,7 +41,7 @@
 
     {{ include('sortie/_delete_form.html.twig') }}
 
-    <h2>Participants inscrits</h2>
+    <h3>Participants inscrits</h3>
     <ul>
         {% for participant in sortie.participant %}
             <li>
