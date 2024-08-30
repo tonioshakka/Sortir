@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: SortieRepository::class)]
 #[ORM\EntityListeners([SortieEntityListener::class])]
 #[ORM\UniqueConstraint(columns: ['nom', 'date_heure_debut','organisateur_id'])]
-#[UniqueEntity(fields: ['nom', 'date_heure_debut','organisateur_id'], message: 'Cette sortie existe déjà')]
+#[UniqueEntity(fields: ['nom', 'dateHeureDebut','organisateur'], message: 'Cette sortie existe déjà')]
 class Sortie
 {
     #[ORM\Id]
@@ -67,9 +67,10 @@ class Sortie
     #[ORM\JoinColumn(nullable: false)]
     private ?Participant $organisateur = null;
 
-    #[ORM\ManyToOne(inversedBy: 'sorties')]
+    #[ORM\ManyToOne(inversedBy: 'sorties', cascade: ['persist'])]
     #[ORM\JoinColumn(nullable: false)]
     #[Assert\NotNull(message: 'Vous devez renseigner un lieu')]
+    #[Assert\Valid]
     private ?Lieu $lieu = null;
 
     #[ORM\Column(length: 255, nullable: true)]
