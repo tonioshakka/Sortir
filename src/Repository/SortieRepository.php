@@ -17,60 +17,61 @@ class SortieRepository extends ServiceEntityRepository
     }
 
     public function findByCriteria(array $criteria, $user): array
-    {
-        $qb = $this->createQueryBuilder('s')
-            ->leftJoin('s.site', 'site')
-            ->addSelect('site');
-
-        // Filtrer par site
-        if (!empty($criteria['site'])) {
-            $qb->andWhere('site.id = :site')
-                ->setParameter('site', $criteria['site']->getId());
-        }
-
-        // Filtrer par recherche de texte dans le nom de la sortie
-        if (!empty($criteria['nom'])) {
-            $qb->andWhere('s.nom LIKE :nom')
-                ->setParameter('nom', '%' . $criteria['nom'] . '%');
-        }
-
-        // Filtrer par date de début et de fin
-        if (!empty($criteria['dateDebut'])) {
-            $qb->andWhere('s.dateHeureDebut >= :dateDebut')
-                ->setParameter('dateDebut', $criteria['dateDebut']);
-        }
-        if (!empty($criteria['dateFin'])) {
-            $qb->andWhere('s.dateHeureFin <= :dateFin')
-                ->setParameter('dateFin', $criteria['dateFin']);
-        }
-
-        // Filtrer par état
-        if (!empty($criteria['etat'])) {
-            if (in_array('organisateur', $criteria['etat'])) {
-                $qb->andWhere('s.organisateur = :user')
-                    ->setParameter('user', $user);
-            }
-
-            if (in_array('inscrit', $criteria['etat'])) {
-                $qb->innerJoin('s.inscriptions', 'i')
-                    ->andWhere('i.utilisateur = :user')
-                    ->setParameter('user', $user);
-            }
-
-            if (in_array('non_inscrit', $criteria['etat'])) {
-                $qb->leftJoin('s.inscriptions', 'i_not')
-                    ->andWhere('i_not.utilisateur IS NULL OR i_not.utilisateur != :user')
-                    ->setParameter('user', $user);
-            }
-
-            if (in_array('passees', $criteria['etat'])) {
-                $qb->andWhere('s.dateHeureFin < :now')
-                    ->setParameter('now', new \DateTime());
-            }
-        }
-
-        return $qb->getQuery()->getResult();
+{
+    $qb = $this->createQueryBuilder('s')
+        ->leftJoin('s.organisateur', 'p');  // Utilisez 'lieu' au lieu de 'site'
+    // Filtrer par lieu
+    if (!empty($criteria['site'])) {
+        $qb->andWhere('p.site = :site')
+            ->setParameter('site', $criteria['site']->getId());
     }
+
+    // Filtrer par recherche de texte dans le nom de la sortie
+    if (!empty($criteria['search'])) {
+        $qb->andWhere('s.nom LIKE :nom')
+            ->setParameter('nom', '%' . $criteria['search'] . '%');
+    }
+
+    if (!empty($criteria['dateDebut']) && !empty($criteria['dateFin'])) {
+        $qb->andWhere('s.dateHeureDebut BETWEEN :dateDebut AND :dateFin')
+            ->setParameter('dateDebut', $criteria['dateDebut'])
+            ->setParameter('dateFin', $criteria['dateFin']);
+    } elseif (!empty($criteria['dateDebut'])) {
+        // Si seule la date de début est fournie, vous pouvez filtrer sur la date de début uniquement
+        $qb->andWhere('s.dateHeureDebut >= :dateDebut')
+            ->setParameter('dateDebut', $criteria['dateDebut']);
+    } elseif (!empty($criteria['dateFin'])) {
+        // Si seule la date de fin est fournie, vous pouvez filtrer sur la date de fin uniquement
+        $qb->andWhere('s.dateHeureDebut <= :dateFin')
+            ->setParameter('dateFin', $criteria['dateFin']);
+    }
+
+    // Filtrer par état
+    if (!empty($criteria['etat'])) {
+        if (in_array('organisateur', $criteria['etat'])) {
+            $qb->andWhere('s.organisateur = :user')
+                ->setParameter('user', $user);
+        }
+
+        if (in_array('inscrit', $criteria['etat'])) {
+            $qb->andWhere('p = :user')
+                ->setParameter('user', $user);
+        }
+
+        if (in_array('non_inscrit', $criteria['etat'])) {
+            $qb->andWhere('p IS NULL OR p != :user')
+                ->setParameter('user', $user);
+        }
+
+        if (in_array('passees', $criteria['etat'])) {
+            $qb->andWhere('s.dateLimiteInscription < :now')
+                ->setParameter('now', new \DateTime());
+        }
+    }
+
+    return $qb->getQuery()->getResult();
+}
+
 
 
 

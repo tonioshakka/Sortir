@@ -8,7 +8,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\SearchType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -20,13 +20,13 @@ class TriSortieType extends AbstractType
             ->add('site', EntityType::class, [
                 'class' => Site::class,
                 'choice_label' => 'nom',
-                'placeholder' => $options['default_site'] || 'Sélectionner un site',
-                'required' => false,
+                'empty_data' => 'default_value' ,
+                'required' => true,
             ])
             ->add('search', SearchType::class, [
                 'label' => 'Le nom de la sortie contient',
                 'required' => false,
-                'attr' => ['placeholder' => 'Rechercher par nom...']
+                'attr' => ['placeholder' => 'Rechercher...']
             ])
             ->add('dateDebut', DateTimeType::class, [
                 'label' => 'Entre ',
@@ -50,7 +50,12 @@ class TriSortieType extends AbstractType
                 'required' => false,
                 'multiple' => true,
                 'expanded' => true,
-            ]);
+            ])
+            ->add('submit', SubmitType::class, [
+                'label' => 'Filtrer',
+            ])
+        ;
+
 
     }
 
