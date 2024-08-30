@@ -44,12 +44,12 @@ class SortieType extends AbstractType
             ->add('etat', EntityType::class, [
                 'class' => Etat::class,
                 'choice_label' => 'libelle',
-                'choice_label' => 'libelle',
                 'placeholder' => 'Selectionner une etat',
             ])
             ->add('lieu', EntityType::class, [
                 'class' => Lieu::class,
                 'required' => false,
+                'mapped' => false,
                 'choice_label' => function($lieu) {
                 return $lieu->getNom() . ' - ' . $lieu->getRue() . ' - ' . $lieu->getVille();
                 },
@@ -65,6 +65,26 @@ class SortieType extends AbstractType
                 $data = $event->getData();
                 $form = $event->getForm();
 
+                if ($data['lieuNew']['nom']) {
+
+                    $form->add('lieuNew', LieuType::class, [
+                        'label' => 'Ajouter un lieu',
+                        'required' => false,
+                        'mapped' => true,
+                        'property_path' => 'lieu',
+                    ]);
+                }
+                else {
+                    $form->add('lieu', EntityType::class, [
+                        'class' => Lieu::class,
+                        'required' => false,
+                        'mapped' => true,
+                        'choice_label' => function($lieu) {
+                            return $lieu->getNom() . ' - ' . $lieu->getRue() . ' - ' . $lieu->getVille();
+                        },
+                        'placeholder' => '-- Selectionner une lieu --',
+                    ]);
+                }
             })
         ;
     }
@@ -73,7 +93,7 @@ class SortieType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Sortie::class,
-            'cascade_validation' => true,
+            'allow_extra_fields' => true,
         ]);
     }
 }

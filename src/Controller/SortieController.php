@@ -13,7 +13,6 @@ use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
@@ -23,7 +22,6 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-#[Route('/sortie')]
 #[IsGranted("ROLE_USER")]
 class SortieController extends AbstractController
 {
@@ -56,7 +54,7 @@ class SortieController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_sortie_new', methods: ['GET', 'POST'])]
+    #[Route('/sortie/new', name: 'app_sortie_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager, ValidatorInterface $validator): Response
     {
         $sortie = new Sortie();
@@ -64,20 +62,6 @@ class SortieController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if (!$form->getdata()->getLieu()) {
-                $lieu = $form->get('lieuNew')->getData();
-                $errors = $validator->validate($lieu);
-                if (count($errors) > 0) {
-                    foreach ($errors as $error) {
-                        $form->addError(new FormError($error->getMessage()));
-                    }
-                    return $this->render('sortie/new.html.twig', [
-                        'sortie' => $sortie,
-                        'form' => $form,
-                    ]);
-                }
-                $sortie->setLieu($lieu);
-            }
 
             $entityManager->persist($sortie);
             $entityManager->flush();
@@ -91,7 +75,7 @@ class SortieController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_sortie_show', methods: ['GET'])]
+    #[Route('/sortie/{id}', name: 'app_sortie_show', methods: ['GET'])]
     public function show(Sortie $sortie): Response
     {
         return $this->render('sortie/show.html.twig', [
@@ -99,27 +83,13 @@ class SortieController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_sortie_edit', methods: ['GET', 'POST'])]
+    #[Route('/sortie/edit/{id}', name: 'app_sortie_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Sortie $sortie, EntityManagerInterface $entityManager, ValidatorInterface $validator): Response
     {
         $form = $this->createForm(SortieType::class, $sortie);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if (!$form->getdata()->getLieu()) {
-                $lieu = $form->get('lieuNew')->getData();
-                $errors = $validator->validate($lieu);
-                if (count($errors) > 0) {
-                    foreach ($errors as $error) {
-                        $form->addError(new FormError($error->getMessage()));
-                    }
-                    return $this->render('sortie/edit.html.twig', [
-                        'sortie' => $sortie,
-                        'form' => $form,
-                    ]);
-                }
-                $sortie->setLieu($lieu);
-            }
 
             $entityManager->persist($sortie);
             $entityManager->flush();
@@ -133,7 +103,7 @@ class SortieController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_sortie_delete', methods: ['POST'])]
+    #[Route('/sortie/{id}', name: 'app_sortie_delete', methods: ['POST'])]
     public function delete(Request $request, Sortie $sortie, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $sortie->getId(), $request->getPayload()->getString('_token'))) {
@@ -144,7 +114,7 @@ class SortieController extends AbstractController
         return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/{id}/inscription', name: 'app_sortie_inscription', methods: ['GET', 'POST'])]
+    #[Route('/sortie/inscription/{id}', name: 'app_sortie_inscription', methods: ['GET', 'POST'])]
     public function inscription(Request $request, Sortie $sortie, EntityManagerInterface $entityManager, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
         $token = $request->query->get('token');
@@ -188,7 +158,7 @@ class SortieController extends AbstractController
         return $this->redirectToRoute('app_sortie_index', ['id' => $sortie->getId()], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/{id}/desistement', name: 'app_sortie_desistement', methods: ['GET', 'POST'])]
+    #[Route('/sortie/desistement/{id}', name: 'app_sortie_desistement', methods: ['GET', 'POST'])]
     public function desistement(Request $request, Sortie $sortie, EntityManagerInterface $entityManager, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
         $token = $request->query->get('token');
@@ -232,7 +202,7 @@ class SortieController extends AbstractController
     /**
      * @throws TransportExceptionInterface
      */
-    #[Route('/annuler/{id}', name: 'app_sortie_annuler', methods: ['GET']),]
+    #[Route('/sortie/annuler/{id}', name: 'app_sortie_annuler', methods: ['GET']),]
     public function annulerSortie(Request $request,
                                   Sortie $sortie,
                                   EntityManagerInterface $entityManager,
@@ -315,7 +285,7 @@ class SortieController extends AbstractController
     }
 
 
-#[Route('/motif/{id}', name: 'app_sortie_form_annuler', methods: ['GET','POST'])]
+#[Route('/sortie/motif/{id}', name: 'app_sortie_form_annuler', methods: ['GET','POST'])]
     public function formAnnuler(Request $request, Sortie $sortie, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(AnnulationType::class, $sortie, [
