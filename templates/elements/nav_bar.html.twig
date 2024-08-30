@@ -1,0 +1,15 @@
+<nav>
+    <img src="{{ asset('images/logo-4.webp') }}" alt="logo" style="width: 8%;height: 8%">
+
+    {% if is_granted('IS_AUTHENTICATED') %}
+        <a href="{{ path('app_sortie_index') }}">Liste des sorties</a>
+        <a href="{{ path('app_sortie_new') }}">Crée une sortie</a>
+        <a href="{{ path('app_participant_show', {'id':app.user.id}) }}">Profil</a>
+        {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('app_participant_index') }}">Liste des partipants</a>
+            <a href="{{ path('app_participant_new') }}">Crée un paticipant</a>
+        {% endif %}
+        <a href="{{ path('app_logout') }}">Se déconecter</a>
+    {% endif %}
+
+</nav>

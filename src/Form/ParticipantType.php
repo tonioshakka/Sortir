@@ -19,7 +19,6 @@ class ParticipantType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('email', EmailType::class)
             ->add('roles', ChoiceType::class, [
                 'choices' =>[
                     'Admin' => 'ROLE_ADMIN',
@@ -48,6 +47,12 @@ class ParticipantType extends AbstractType
                 'second_options' => ['label' => 'Confirmer le mot de passe'],
             ]);
         }
+        if ($options['email_field']) {
+            $builder->add('email', EmailType::class, [
+                'required' =>true,
+                'label' => 'Email',
+            ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -55,6 +60,7 @@ class ParticipantType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Participant::class,
             'password_field' => true,
+            'email_field' => true,
         ]);
     }
 }

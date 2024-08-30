@@ -102,7 +102,6 @@ class Sortie
 
     public function getDateHeureDebut(): ?\DateTimeInterface
     {
-
         return $this->dateHeureDebut;
     }
 
