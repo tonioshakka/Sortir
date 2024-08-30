@@ -83,6 +83,11 @@ class Sortie
         $this->participant = new ArrayCollection();
     }
 
+    public function getNombreInscrits(): int
+    {
+        return count($this->participant);
+    }
+
     public function getId(): ?int
     {
         return $this->id;
