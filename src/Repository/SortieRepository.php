@@ -18,8 +18,14 @@ class SortieRepository extends ServiceEntityRepository
 
     public function findByCriteria(array $criteria, $user): array
 {
+    $dateLimit = new \DateTime();
+    $dateLimit->modify('-1 month');
+
     $qb = $this->createQueryBuilder('s')
-        ->leftJoin('s.organisateur', 'p');  // Utilisez 'lieu' au lieu de 'site'
+        ->leftJoin('s.organisateur', 'p');// Utilisez 'lieu' au lieu de 'site'
+
+    $qb->andWhere('s.dateHeureDebut >= :dateLimit')
+        ->setParameter('dateLimit', $dateLimit);
     // Filtrer par lieu
     if (!empty($criteria['site'])) {
         $qb->andWhere('p.site = :site')
