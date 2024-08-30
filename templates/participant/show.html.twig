@@ -7,6 +7,9 @@
 
     <table class="table">
         <tbody>
+        {% if participant.image != null %}
+        <img src="{{ asset('uploads/profil_pics/'~ participant.image.imageName) }}" alt="">
+        {% endif %}
         <tr>
             <th>Id</th>
             <td>{{ participant.id }}</td>

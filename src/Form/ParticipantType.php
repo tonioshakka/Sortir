@@ -13,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Vich\UploaderBundle\Form\Type\VichFileType;
 
 class ParticipantType extends AbstractType
 {
@@ -31,6 +32,10 @@ class ParticipantType extends AbstractType
             ->add('prenom')
             ->add('telephone')
             ->add('actif')
+            ->add('image', ImageType::class, [
+                'label' => 'Profile Picture',
+                // Configuration spécifique si besoin
+            ])
             ->add('site', EntityType::class, [
                 'class' => Site::class,
                 'choice_label' => 'id',

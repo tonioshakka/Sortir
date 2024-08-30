@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Image;
 use App\Entity\Participant;
 use App\Form\ParticipantType;
+use App\Repository\ImageRepository;
 use App\Repository\ParticipantRepository;
 use App\Service\EnvoiMail;
 use App\Service\GenerateurDeMotDePasse;
@@ -23,6 +25,7 @@ class ParticipantController extends AbstractController
     #[IsGranted("ROLE_ADMIN")]
     public function index(ParticipantRepository $participantRepository): Response
     {
+
         return $this->render('participant/index.html.twig', [
             'participants' => $participantRepository->findAll(),
         ]);
@@ -48,13 +51,26 @@ class ParticipantController extends AbstractController
         ]);
         $form->handleRequest($request);
 
+
         if ($form->isSubmitted() && $form->isValid()) {
             $leMotDePasse = $generateurDeMotDePasse->genererUnMotDePasse(8);
             $message = 'Penser a changer votre mot passe l\'or de votre premier connection, votre mot de passe par default est : ';
             $hashedPassword = $passwordHasher->hashPassword($participant, $leMotDePasse);
             $participant->setPassword($hashedPassword);
+
+
+            $image = $participant->getImage();
+
+
+
+            if ($image) {
+                $participant->setImage($image);
+                $image->setProfilPic($participant);
+                $entityManager->persist($image);
+            }
             $entityManager->persist($participant);
             $entityManager->flush();
+
 
             $envoiMail->EnvoiMailCreationCompte($participant->getEmail(),$leMotDePasse,$message);
 
@@ -71,12 +87,15 @@ class ParticipantController extends AbstractController
     #[IsGranted("ROLE_USER")]
     public function show(Participant $participant): Response
     {
+
+//dd($participant);
         return $this->render('participant/show.html.twig', [
             'participant' => $participant,
+
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_participant_edit', methods: ['GET', 'POST'])]
+    #[Route('/edit/{id}', name: 'app_participant_edit', methods: ['GET', 'POST'])]
     #[IsGranted("ROLE_USER")]
     public function edit(Request $request, Participant $participant,UserPasswordHasherInterface $passwordHasher ,EntityManagerInterface $entityManager): Response
     {

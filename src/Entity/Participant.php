@@ -9,9 +9,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+
 
 #[ORM\Entity(repositoryClass: ParticipantRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
+#[Vich\Uploadable()]
 class Participant implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -51,6 +54,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\JoinColumn(nullable: false)]
     private ?Site $site = null;
 
+
     /**
      * @var Collection<int, Sortie>
      */
@@ -62,6 +66,10 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\OneToMany(targetEntity: Sortie::class, mappedBy: 'organisateur', orphanRemoval: true)]
     private Collection $mesSorties;
+
+    #[ORM\OneToOne(mappedBy: 'profil_pic', cascade: ['persist', 'remove'])]
+    private ?Image $image = null;
+    private string $Image;
 
     public function __construct()
     {
@@ -260,4 +268,18 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+
+    public function getImage(): ?Image
+    {
+        return $this->image;
+    }
+
+    public function setImage(?Image $image): void
+    {
+        $this->image = $image;
+    }
+
+
+
 }
