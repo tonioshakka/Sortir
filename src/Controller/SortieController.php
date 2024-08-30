@@ -106,20 +106,6 @@ class SortieController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if (!$form->getdata()->getLieu()) {
-                $lieu = $form->get('lieuNew')->getData();
-                $errors = $validator->validate($lieu);
-                if (count($errors) > 0) {
-                    foreach ($errors as $error) {
-                        $form->addError(new FormError($error->getMessage()));
-                    }
-                    return $this->render('sortie/edit.html.twig', [
-                        'sortie' => $sortie,
-                        'form' => $form,
-                    ]);
-                }
-                $sortie->setLieu($lieu);
-            }
 
             $entityManager->persist($sortie);
             $entityManager->flush();
