@@ -23,7 +23,7 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 
-#[Route('/sortie')]
+
 #[IsGranted("ROLE_USER")]
 class SortieController extends AbstractController
 {
@@ -49,6 +49,7 @@ class SortieController extends AbstractController
             // Si aucun tri n'est effectué, on récupère toutes les sorties
             $sorties = $sortieRepository->findAll();
         }
+
 
         return $this->render('sortie/index.html.twig', [
             'sorties' => $sorties,
