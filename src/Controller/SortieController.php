@@ -81,12 +81,19 @@ class SortieController extends AbstractController
     #[Route('/sortie/{id}', name: 'app_sortie_show', methods: ['GET'])]
     public function show(Sortie $sortie): Response
     {
+        // Récupération de l'utilisateur connecté
+        $participant = $this->getUser();
+
+        // Vérifie si l'utilisateur connecté est l'organisateur de la sortie
+        $isOrganisateur = $sortie->getOrganisateur() === $participant;
+
         return $this->render('sortie/show.html.twig', [
             'sortie' => $sortie,
-            'participant' => $this->getUser(),
-
+            'participant' => $participant,
+            'isOrganisateur' => $isOrganisateur,
         ]);
     }
+
 
     #[Route('/sortie/edit/{id}', name: 'app_sortie_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Sortie $sortie, EntityManagerInterface $entityManager, ValidatorInterface $validator): Response
@@ -108,10 +115,12 @@ class SortieController extends AbstractController
         ]);
     }
 
-    #[Route('/sortie/{id}', name: 'app_sortie_delete', methods: ['POST'])]
-    public function delete(Request $request, Sortie $sortie, EntityManagerInterface $entityManager): Response
+    #[Route('/sortie/delete/{id}', name: 'app_sortie_delete', methods: ['GET'])]
+    public function delete(Request $request, Sortie $sortie, EntityManagerInterface $entityManager, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
-        if ($this->isCsrfTokenValid('delete' . $sortie->getId(), $request->getPayload()->getString('_token'))) {
+        $token = $request->query->get('token');
+
+        if ($this->isCsrfTokenValid('supprimerSortie' . $sortie->getId(), $token)) {
             $entityManager->remove($sortie);
             $entityManager->flush();
         }
@@ -137,7 +146,7 @@ class SortieController extends AbstractController
         }
 
         // Vérifier si la date limite d'inscription est dépassée
-        if ($sortie->getDateLimiteInscription() < new \DateTime()) {
+        if ($sortie->getDateLimiteInscription() < new \DateTime() or $sortie->getDateHeureDebut() < new \DateTime()) {
             $this->addFlash('error', 'La date limite d\'inscription est dépassée, dommage.');
             return $this->redirectToRoute('app_sortie_index', ['id' => $sortie->getId()]);
         }
