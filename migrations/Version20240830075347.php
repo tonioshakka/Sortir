@@ -29,7 +29,7 @@ final class Version20240830075347 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->addSql('ALTER TABLE image DROP FOREIGN KEY FK_C53D045FEFAE74C3');
-        $this->addSql('DROP TABLE image');
+//        $this->addSql('DROP TABLE image');
         $this->addSql('ALTER TABLE participant ADD image_name VARCHAR(255) DEFAULT NULL, ADD image_file VARCHAR(255) DEFAULT NULL');
     }
 }
