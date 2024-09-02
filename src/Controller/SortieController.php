@@ -47,7 +47,7 @@ class SortieController extends AbstractController
             $sorties = $sortieRepository->findByCriteria($data, $user);
         } else {
             // Si aucun tri n'est effectué, on récupère toutes les sorties
-            $sorties = $sortieRepository->findAll();
+            $sorties = $sortieRepository->findNonArchived();
         }
 
 
@@ -221,6 +221,7 @@ class SortieController extends AbstractController
 
         //Récupérer l'organisateur
         $organisateur = $sortie->getOrganisateur()->getId();
+
 
 
         //Récupérer utilisateur en cours
