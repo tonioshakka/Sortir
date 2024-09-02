@@ -21,26 +21,27 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Nom</th>
-                <th>DateHeureDebut</th>
-                <th>Duree</th>
+                <th>Nom de la sortie</th>
+                <th>Date de la sortie</th>
                 <th>DateLimiteInscription</th>
-                <th>NbInscriptionsMax</th>
-                <th>InfosSortie</th>
-                <th>actions</th>
+                <th>Inscrits/Places</th>
+                <th>Etat</th>
+                {#                <th>Inscrit</th>#}
+                <th>Organisateur</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
 
         {% for sortie in sorties %}
             <tr>
-                <td>{{ sortie.id }}</td>
                 <td><a href="{{ path('app_sortie_show', {'id': sortie.id}) }}">{{ sortie.nom }}</a></td>
-                <td>{{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ sortie.nbInscriptionsMax }}</td>
-                <td>{{ sortie.infosSortie }}</td>
+                <td>{{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('d/m/Y H\\Hi') : '' }}</td>
+                <td>{{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date('d/m/Y H\\hi') : '' }}</td>
+                <td>{{ sortie.getNombreInscrits() }} / {{ sortie.NbInscriptionsMax() }}</td>
+                <td>{{ sortie.etat.libelle }}</td>
+{#              <td>{{ sortie.inscrit }}</td>#}
+                <td><a href={{ path('app_participant_show', {'id': sortie.organisateur.id}) }}>{{ sortie.organisateur.nom }} {{ sortie.organisateur.prenom }}</a></td>
                 <td>
                     <a href="{{ path('app_sortie_show', {'id': sortie.id}) }}">show</a>
                     <a href="{{ path('app_sortie_edit', {'id': sortie.id}) }}">edit</a>

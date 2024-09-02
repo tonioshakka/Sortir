@@ -13,7 +13,6 @@ use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
@@ -23,7 +22,8 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-#[Route('/sortie')]
+
+
 #[IsGranted("ROLE_USER")]
 class SortieController extends AbstractController
 {
@@ -49,6 +49,7 @@ class SortieController extends AbstractController
             // Si aucun tri n'est effectué, on récupère toutes les sorties
             $sorties = $sortieRepository->findAll();
         }
+
 
         return $this->render('sortie/index.html.twig', [
             'sorties' => $sorties,
