@@ -27,21 +27,27 @@
     </div>
 
     <a href="{{ path('app_sortie_index') }}">Retour à la liste</a>
-    <a href="{{ path('app_sortie_edit', {'id': sortie.id}) }}">Éditer</a>
 
+    {% if not isOrganisateur %}
     {% if (not sortie.participant.contains(participant) and sortie.dateLimiteInscription|date('U') > "now"|date('U') or sortie.dateLimiteInscription is null) and (sortie.nbInscriptionsMax > 0 or sortie.nbInscriptionsMax is null) and sortie.etat.id == 2 %}
         <a href="{{ path('app_sortie_inscription', {'id': sortie.id , 'token': csrf_token('inscription'~sortie.id)}) }}">S'inscrire</a>
     {% endif %}
-    {% if (sortie.participant.contains(participant) and sortie.dateLimiteInscription|date('U') > "now"|date('U') or sortie.dateLimiteInscription is null) and sortie.dateHeureDebut|date('U') > "now"|date('U') and sortie.etat.id == 2 %}
+    {% if (sortie.participant.contains(participant) and (sortie.dateLimiteInscription|date('U') > "now"|date('U') or sortie.dateLimiteInscription is null) and sortie.dateHeureDebut|date('U') > "now"|date('U') )and sortie.etat.id == 2 %}
         <a href="{{ path('app_sortie_desistement', {'id': sortie.id , 'token': csrf_token('desistement'~sortie.id)}) }}">Annuler mon inscription</a>
+    {% endif %}
     {% endif %}
 
 
 
 
+    {% if isOrganisateur %}
+        <a href="{{ path('app_sortie_edit', {'id': sortie.id}) }}">Éditer</a>
+    {% endif %}
 
+    {% if is_granted('ROLE_ADMIN') %}
+        <a href="{{ path('app_sortie_delete', {'id': sortie.id, 'token': csrf_token('supprimerSortie'~sortie.id)}) }}">Supprimer la sortie</a>
+    {% endif %}
 
-    {{ include('sortie/_delete_form.html.twig') }}
 
     <h3>Participants inscrits</h3>
     <ul>
