@@ -91,7 +91,7 @@ class SortieRepository extends ServiceEntityRepository
                 ->setParameter('now', new \DateTime());
         }
     }
-
+        $qb->andWhere('s.dateHeureDebut > :dateLimit')->setParameter('dateLimit', $dateLimit);
     return $qb->getQuery()->getResult();
 }
 
