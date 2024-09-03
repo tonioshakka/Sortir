@@ -11,7 +11,7 @@
             <li class="sortie-data"><span class="sortie-field"></span>ville :<span class="sortie-value">{{ sortie.lieu.ville }}</span></li>
             <li class="sortie-data"><span class="sortie-field">rue :</span><span class="sortie-value"> {{ sortie.lieu.rue }}</span></li>
             {% if sortie.dateLimiteInscription %}
-                <li class="sortie-data"><span class="sortie-field"></span>Clôture<span class="sortie-value">{{ sortie.dateLimiteInscription }}</span></li>
+                <li class="sortie-data"><span class="sortie-field"></span>Clôture<span class="sortie-value">{{ sortie.dateLimiteInscription | date('d/m/Y H\hi') }}</span></li>
             {% endif %}
             {% if sortie.nbInscriptionsMax %}
                 <li class="sortie-data"><span class="sortie-field"></span>Nombre de places :<span class="sortie-value">{{ sortie.nbInscriptionsMax }}</span></li>
@@ -27,19 +27,27 @@
     </div>
 
     <a href="{{ path('app_sortie_index') }}">Retour à la liste</a>
-    <a href="{{ path('app_sortie_edit', {'id': sortie.id}) }}">Éditer</a>
 
-
-    {% if sortie.dateLimiteInscription|date('U') > "now"|date('U') and sortie.nbInscriptionsMax > 0 and sortie.etat.id==2 %}
+    {% if not isOrganisateur %}
+    {% if (not sortie.participant.contains(participant) and sortie.dateLimiteInscription|date('U') > "now"|date('U') or sortie.dateLimiteInscription is null) and (sortie.nbInscriptionsMax > 0 or sortie.nbInscriptionsMax is null) and sortie.etat.id == 2 %}
         <a href="{{ path('app_sortie_inscription', {'id': sortie.id , 'token': csrf_token('inscription'~sortie.id)}) }}">S'inscrire</a>
     {% endif %}
-
-    {% if sortie.dateLimiteInscription|date('U') > "now"|date('U') and sortie.dateHeureDebut > "now"|date('U') and sortie.etat.id==2 %}
+    {% if (sortie.participant.contains(participant) and (sortie.dateLimiteInscription|date('U') > "now"|date('U') or sortie.dateLimiteInscription is null) and sortie.dateHeureDebut|date('U') > "now"|date('U') )and sortie.etat.id == 2 %}
         <a href="{{ path('app_sortie_desistement', {'id': sortie.id , 'token': csrf_token('desistement'~sortie.id)}) }}">Annuler mon inscription</a>
+    {% endif %}
     {% endif %}
 
 
-    {{ include('sortie/_delete_form.html.twig') }}
+
+
+    {% if isOrganisateur %}
+        <a href="{{ path('app_sortie_edit', {'id': sortie.id}) }}">Éditer</a>
+    {% endif %}
+
+    {% if is_granted('ROLE_ADMIN') %}
+        <a href="{{ path('app_sortie_delete', {'id': sortie.id, 'token': csrf_token('supprimerSortie'~sortie.id)}) }}">Supprimer la sortie</a>
+    {% endif %}
+
 
     <h3>Participants inscrits</h3>
     <ul>
