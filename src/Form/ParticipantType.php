@@ -19,6 +19,7 @@ class ParticipantType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $isEdit =
         $builder
             ->add('roles', ChoiceType::class, [
                 'choices' =>[
@@ -32,6 +33,7 @@ class ParticipantType extends AbstractType
             ->add('prenom')
             ->add('telephone')
             ->add('actif')
+
             ->add('image', ImageType::class, [
                 'label' => 'Profile Picture',
                 // Configuration spécifique si besoin
@@ -66,6 +68,7 @@ class ParticipantType extends AbstractType
             'data_class' => Participant::class,
             'password_field' => true,
             'email_field' => true,
+            'is_edit' => false,
         ]);
     }
 }

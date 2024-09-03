@@ -6,12 +6,12 @@ use App\Repository\ImageRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 use Symfony\Component\HttpFoundation\File\File;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
+
 
 #[ORM\Entity(repositoryClass: ImageRepository::class)]
 #[ORM\HasLifecycleCallbacks]
-#[Vich\Uploadable]
-class Image implements \Serializable
+
+class Image
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -25,7 +25,6 @@ class Image implements \Serializable
 
     #[ORM\Column(length: 255)]
 
-    #[Vich\UploadableField(mapping: 'profil_pic', fileNameProperty: 'imageName', size: 'imageSize')]
 
     private File|string|null $imageFile;
 
@@ -111,27 +110,18 @@ class Image implements \Serializable
         return $this->imageFile;
     }
 
-    public function setImageFile(File|string|null $imageFile): void
+    public function setImageFile(File|null $imageFile): File
     {
-        $this->imageFile = $imageFile;
+
 
         if (null !== $imageFile) {
             // It is required that at least one field changes if you are using doctrine
             // otherwise the event listeners won't be called and the file is lost
             $this->updatedAt = new \DateTimeImmutable();
         }
+        return  $this->imageFile = $imageFile;
     }
 
-    public function serialize()
-    {
-        $this->imageFile = base64_encode($this->imageFile);
-    }
-#[ORM\PostLoad]
-    public function unserialize($serialized)
-{
-    $this->imageFile = base64_decode($this->imageFile);
 
-
-}
 
     }
