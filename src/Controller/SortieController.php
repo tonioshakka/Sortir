@@ -14,6 +14,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
@@ -22,8 +23,8 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-#[Route('/sortie')]
 #[IsGranted("ROLE_USER")]
 class SortieController extends AbstractController
 {
@@ -56,9 +57,12 @@ class SortieController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_sortie_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, ValidatorInterface $validator): Response
+    #[Route('sortie/new', name: 'app_sortie_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, EntityManagerInterface $entityManager, HttpClientInterface $http): Response
     {
+        $response = $http->request('GET', 'https://api-adresse.data.gouv.fr/search/?q=8+bd+du+port+amiens');
+        $adresse = json_decode($response->getContent(), true)['features'][0]['geometry']['coordinates'];
+
         $sortie = new Sortie();
         $form = $this->createForm(SortieType::class, $sortie);
         $form->handleRequest($request);
@@ -74,6 +78,7 @@ class SortieController extends AbstractController
         return $this->render('sortie/new.html.twig', [
             'sortie' => $sortie,
             'form' => $form,
+            'adresse' => $adresse,
         ]);
     }
 
@@ -86,7 +91,7 @@ class SortieController extends AbstractController
     }
 
     #[Route('/sortie/edit/{id}', name: 'app_sortie_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Sortie $sortie, EntityManagerInterface $entityManager, ValidatorInterface $validator): Response
+    public function edit(Request $request, Sortie $sortie, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(SortieType::class, $sortie);
         $form->handleRequest($request);
