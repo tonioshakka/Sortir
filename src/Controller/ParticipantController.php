@@ -2,10 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\Image;
 use App\Entity\Participant;
 use App\Form\ParticipantType;
-use App\Repository\ImageRepository;
 use App\Repository\ParticipantRepository;
 use App\Service\EnvoiMail;
 use App\Service\GenerateurDeMotDePasse;

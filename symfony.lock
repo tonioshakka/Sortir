@@ -311,6 +311,13 @@
             "branch": "main",
             "version": "1.13",
             "ref": "1b3064c2f6b255c2bc2f56461aaeb76b11e07e36"
+<<<<<<< HEAD
         }
+=======
+        },
+        "files": [
+            "./config/packages/vich_uploader.yaml"
+        ]
+>>>>>>> 520484dc0df1a5de5660c7f356d211ed684d74cb
     }
 }

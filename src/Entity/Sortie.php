@@ -40,8 +40,8 @@ class Sortie
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     #[Assert\Type(Types::DATETIME_MUTABLE, message: 'Format de date invalide')]
-    #[Assert\LessThan(propertyPath: 'dateHeureDebut', message: 'La fin des inscriptions doit être anterieur à la date de début de la sortie')]
-    #[Assert\GreaterThan('now', message: 'La date limite d\'inscription doit se situer dabs le futur')]
+    #[Assert\LessThan(propertyPath: 'dateHeureDebut', message: 'La fin des inscriptions doit être antérieure à la date de début de la sortie')]
+    #[Assert\GreaterThan('now', message: 'La date limite d\'inscription doit se situer dans le futur')]
     private ?\DateTimeInterface $dateLimiteInscription = null;
 
     #[ORM\Column(nullable: true)]
@@ -81,6 +81,11 @@ class Sortie
     public function __construct()
     {
         $this->participant = new ArrayCollection();
+    }
+
+    public function getNombreInscrits(): int
+    {
+        return count($this->participant);
     }
 
     public function getId(): ?int
@@ -126,8 +131,7 @@ class Sortie
 
     public function getDateLimiteInscription(): ?\DateTimeInterface
     {
-        return $this->dateLimiteInscription;
-    }
+        return $this->dateLimiteInscription ?? $this->getDateHeureDebut();    }
 
     public function setDateLimiteInscription(?\DateTimeInterface $dateLimiteInscription): static
     {

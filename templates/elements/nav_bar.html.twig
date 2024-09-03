@@ -1,15 +1,24 @@
-<nav>
-    <img src="{{ asset('uploads/logo-4.webp') }}" alt="logo" style="width: 8%;height: 8%">
+<header>
+        <div id="menu-btn">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+    <div class="header-nav">
+        <nav class="nav">
 
-    {% if is_granted('IS_AUTHENTICATED') %}
-        <a href="{{ path('app_sortie_index') }}">Liste des sorties</a>
-        <a href="{{ path('app_sortie_new') }}">Crée une sortie</a>
-        <a href="{{ path('app_participant_show', {'id':app.user.id}) }}">Profil</a>
-        {% if is_granted('ROLE_ADMIN') %}
-            <a href="{{ path('app_participant_index') }}">Liste des partipants</a>
-            <a href="{{ path('app_participant_new') }}">Crée un paticipant</a>
-        {% endif %}
-        <a href="{{ path('app_logout') }}">Se déconecter</a>
-    {% endif %}
-
-</nav>
+            {% if is_granted('IS_AUTHENTICATED') %}
+                <ul class="nav-list">
+                    <li class="nav-link"><a class="nav-link" href="{{ path('app_sortie_index') }}">Liste des sorties</a></li>
+                    <li class="nav-link"><a class="nav-link" href="{{ path('app_sortie_new') }}">Crée une sortie</a></li>
+                    <li class="nav-link"><a class="nav-link" href="{{ path('app_participant_show', {'id':app.user.id}) }}">Profil</a></li>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li class="nav-link"><a class="nav-link" href="{{ path('app_participant_index') }}">Liste des partipants</a></li>
+                        <li class="nav-link"><a class="nav-link" href="{{ path('app_participant_new') }}">Crée un paticipant</a></li>
+                    {% endif %}
+                    <li class="nav-link"><a class="nav-link" href="{{ path('app_logout') }}">Se déconecter</a></li>
+                </ul>
+            {% endif %}
+        </nav>
+</header>
+</div>
