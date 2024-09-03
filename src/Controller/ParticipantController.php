@@ -97,14 +97,20 @@ class ParticipantController extends AbstractController
     #[IsGranted("ROLE_USER")]
     public function edit(Request $request, Participant $participant,UserPasswordHasherInterface $passwordHasher ,EntityManagerInterface $entityManager): Response
     {
+        if($this->getUser() !== $participant){
+            return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_FORBIDDEN);
+        }
         $form = $this->createForm(ParticipantType::class, $participant, [
             'email_field' => false,
             ]);
+        $currentPassword = $participant->getPassword();
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $hashedPassword = $passwordHasher->hashPassword($participant, $form->get('password')->getData());
-            $participant->setPassword($hashedPassword);
+
+            $password = $form->get('password')->getData() ? $passwordHasher->hashPassword($participant, $form->get('password')->getData()) : $currentPassword ;
+            $participant->setPassword($password);
+
             $entityManager->flush();
 
             return $this->redirectToRoute('app_participant_index', [], Response::HTTP_SEE_OTHER);
