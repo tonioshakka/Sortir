@@ -41,7 +41,7 @@ class ParticipantController extends AbstractController
 
     #[Route('/new', name: 'app_participant_new', methods: ['GET', 'POST'])]
     #[IsGranted("ROLE_ADMIN")]
-    public function new(SluggerInterface $slugger,Request $request,UserPasswordHasherInterface $passwordHasher,EnvoiMail $envoiMail, GenerateurDeMotDePasse $generateurDeMotDePasse  ,EntityManagerInterface $entityManager): Response
+    public function new(Request $request,UserPasswordHasherInterface $passwordHasher,EnvoiMail $envoiMail, GenerateurDeMotDePasse $generateurDeMotDePasse  ,EntityManagerInterface $entityManager): Response
     {
         $participant = new Participant();
         $form = $this->createForm(ParticipantType::class, $participant, [
@@ -57,18 +57,11 @@ class ParticipantController extends AbstractController
             $participant->setPassword($hashedPassword);
 
 
-            $image = $form->get('image')->getData();
+            $image = $participant->getImage();
+
+
 
             if ($image) {
-                $originalFilename = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'-'.uniqid().'.'.$image->guessExtension();
-
-                try {
-                    $image->move($brochuresDirectory, $newFilename);
-                } catch (FileException $e) {
-                    // ... handle exception if something happens during file upload
-                }
                 $participant->setImage($image);
                 $image->setProfilPic($participant);
                 $entityManager->persist($image);
@@ -104,22 +97,19 @@ class ParticipantController extends AbstractController
     #[IsGranted("ROLE_USER")]
     public function edit(Request $request, Participant $participant,UserPasswordHasherInterface $passwordHasher ,EntityManagerInterface $entityManager): Response
     {
+        if($this->getUser() !== $participant){
+            return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_FORBIDDEN);
+        }
         $form = $this->createForm(ParticipantType::class, $participant, [
             'email_field' => false,
-            'is_edit' => true,
             ]);
+        $currentPassword = $participant->getPassword();
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $hashedPassword = $passwordHasher->hashPassword($participant, $form->get('password')->getData());
-            $participant->setPassword($hashedPassword);
 
-            $imageFile = $form->get('imageFile')->getData();
-            if ($imageFile) {
-                // Si une nouvelle image est chargée, le champ imageFile de l'entité Image sera mis à jour
-                $participant->getImage()->setImageFile($imageFile);
-            }
-
+            $password = $form->get('password')->getData() ? $passwordHasher->hashPassword($participant, $form->get('password')->getData()) : $currentPassword ;
+            $participant->setPassword($password);
 
             $entityManager->flush();
 

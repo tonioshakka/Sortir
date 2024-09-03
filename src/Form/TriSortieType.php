@@ -20,8 +20,8 @@ class TriSortieType extends AbstractType
             ->add('site', EntityType::class, [
                 'class' => Site::class,
                 'choice_label' => 'nom',
-                'placeholder' => $options['default_site'] || 'Sélectionner un site',
-                'required' => false,
+                'data' => $options['default_site'] ,
+                'required' => true,
             ])
             ->add('search', SearchType::class, [
                 'label' => 'Le nom de la sortie contient',
@@ -62,7 +62,6 @@ class TriSortieType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => null,
             'default_site' => null, // Ajoute cette option pour passer le site par défaut
         ]);
     }

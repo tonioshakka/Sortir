@@ -44,7 +44,9 @@
                 <td><a href={{ path('app_participant_show', {'id': sortie.organisateur.id}) }}>{{ sortie.organisateur.nom }} {{ sortie.organisateur.prenom }}</a></td>
                 <td>
                     <a href="{{ path('app_sortie_show', {'id': sortie.id}) }}">show</a>
+                    {% if is_granted('ROLE_ADMIN') or app.user.id == sortie.organisateur.id %}
                     <a href="{{ path('app_sortie_edit', {'id': sortie.id}) }}">edit</a>
+                    {% endif %}
                 </td>
             </tr>
         {% else %}
