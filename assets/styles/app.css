@@ -1,3 +1,217 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/*****************************************************************************
+                           GENERAL
+ *****************************************************************************/
 body {
-    background-color: skyblue;
+    @apply flex flex-col justify-between;
+    background-image: url("../images/logo-b.webp");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    box-sizing: border-box;
+    font-family: monospace;
+    min-height: 100vh;
+
+}
+        /****************
+            NAV BURGER
+        *****************/
+header {
+    display: flex;
+    justify-content: flex-end;
+}
+
+#menu-btn {
+    width: 30px;
+    height: 30px;
+    position: relative;
+    z-index: 2;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+#menu-btn .bar {
+    width: 30px;
+    height: 4px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border-radius: 4px;
+    transform: translate(-50%, -50%);
+    background: #fb0202;
+    transition: all 0.3s ease-in-out;
+}
+
+#menu-btn .bar:nth-of-type(2) {
+    top: calc(50% - 9px);
+}
+
+#menu-btn .bar:nth-of-type(3) {
+    top: calc(50% + 9px);
+}
+
+#menu-btn.active .bar:nth-of-type(1) {
+    display: none;
+}
+
+#menu-btn.active .bar:nth-of-type(2) {
+    top: 50%;
+    transform: translate(-50%, 0%) rotate(45deg);
+}
+
+#menu-btn.active .bar:nth-of-type(3) {
+    top: 50%;
+    transform: translate(-50%, 0%) rotate(-45deg);
+}
+
+.nav {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 15%;
+    height: 100%;
+    padding: 15px;
+    background: rgb(9, 15, 16, 0.8);
+    transform: translateX(100%); /* Cache le menu en dehors de l'écran */
+    transition: transform 0.5s;
+    z-index: 1; /* Pour que le menu soit derrière le bouton */
+    font-family: monospace, cursive;
+    color: #fb0202;
+}
+
+.nav.active {
+    transform: translateX(0); /* Affiche le menu à 50% de l'écran */
+}
+
+.nav-list {
+    list-style-type: none;
+}
+@media (max-width: 768px) {
+    .nav {
+        width: 30%; /* Adapte la largeur pour les tablettes */
+    }
+}
+
+@media (max-width: 480px) {
+    .nav {
+        width: 30%; /* Pleine largeur pour les petits écrans mobiles */
+    }
+
+    .menu-btn {
+        width: 25px; /* Réduit la taille de l'icône burger pour mobile */
+        height: 25px;
+    }
+
+    .menu-btn .bar {
+        width: 25px;
+        height: 3px;
+    }
+}
+        /**********************/
+main{
+    @apply flex flex-col justify-center m-auto w-4/5;
+}
+img{
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+input, textarea{
+    @apply text-black;
+}
+.button{
+    border: 2px solid #ffffff;
+    padding: 10px;
+    background-color: rgba(97, 195, 195, 0.1);
+    text-shadow:
+            -1px -1px 0 #000,
+            1px -1px 0 #000,
+            -1px  1px 0 #000,
+            1px  1px 0 #000; /* Simule une bordure noire autour des lettres */
+    border-radius: 15px;
+}
+/********************************
+    AFFICHAGE DES TABLEAUX
+*********************************/
+.table-auto{
+    @apply table-auto border-collapse mt-5;
+    width: 100%;
+}
+.table-auto th{
+    @apply text-slate-950 p-2 text-left;
+    border: 2px solid black;
+    text-shadow:
+            -1px -1px 0 #ffffff,
+            1px -1px 0 #ffffff,
+            -1px  1px 0 #ffffff,
+            1px  1px 0 #ffffff; /* Simule une bordure noire autour des lettres */
+}
+.table-auto td{
+    @apply p-2 text-center;
+    border: 2px solid black;
+    color: white;
+    text-shadow:
+            -1px -1px 0 #006887,
+            1px -1px 0 #266887,
+            -1px  1px 0 #3f5876,
+            1px  1px 0 #3f5876; /* Simule une bordure noire autour des lettres */
+}
+/****************
+    FOOTER
+*****************/
+.footer{
+    background-color: rgb(9, 15, 16, 0.8);
+    display: flex;
+    padding: 1rem;
+    justify-content: center;
+    text-align: center;
+    font-family: monospace, cursive;
+    color: #fb0202;
+    text-shadow:
+            -1px -1px 0 #ffffff,
+            1px -1px 0 #ffffff,
+            -1px  1px 0 #ffffff,
+            1px  1px 0 #ffffff; /* Simule une bordure noire autour des lettres */
+}
+/*****************************************************************************
+                           HEADER
+ *****************************************************************************/
+.image-logo{
+    @apply w-1/12 py-2 px-2;
+    display: flex;
+    justify-content: center;
+    height: 150px;
+    object-fit: contain;
+}
+
+/**************************************************
+                LOGIN
+**************************************************/
+.form-container{
+    @apply text-center flex flex-col justify-center p-5;
+    max-width: 400px;
+    margin: 0 auto;
+    border: 2px solid #ffffff;
+    border-radius: 15px;
+    background-color: rgba(105, 145, 145, 0.8);
+    color: white;
+    font-size: 1.1em;
+}
+#remember{
+    text-shadow:
+            -1px -1px 0 #000,
+            1px -1px 0 #000,
+            -1px  1px 0 #000,
+            1px  1px 0 #000; /* Simule une bordure noire autour des lettres */
+}
+.form-control{
+    border-radius: 15px;
+    text-align: center;
+}
+.form-control::placeholder {
+    @apply text-gray-700 text-center;
 }
