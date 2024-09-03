@@ -56,6 +56,7 @@ class ParticipantType extends AbstractType
             $builder->add('email', EmailType::class, [
                 'required' =>true,
                 'label' => 'Email',
+
             ]);
         }
     }

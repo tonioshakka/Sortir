@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Participant index{% endblock %}
+{% block title %}Liste des participants{% endblock %}
 
 {% block body %}
     <h1>Participant index</h1>
 
-    <table class="table">
+    <table class="table-auto">
         <thead>
             <tr>
                 <th>Id</th>
@@ -42,5 +42,4 @@
         </tbody>
     </table>
         <a href="{{ path('app_participant_new') }}">Create new</a>
-
 {% endblock %}

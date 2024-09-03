@@ -5,7 +5,7 @@
 {% block body %}
     <h1>Participant</h1>
 
-    <table class="table">
+    <table class="table-auto">
         <tbody>
         {% if participant.image != null %}
         <img src="{{ asset('uploads/profil_pics/'~ participant.image.imageName) }}" alt="">

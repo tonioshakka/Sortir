@@ -14,6 +14,8 @@
 .phpunit.result.cache
 ###< phpunit/phpunit ###
 
+###> symfony/phpunit-bridge ###
+
 
 ###< symfony/phpunit-bridge ###
 
@@ -23,3 +25,5 @@
 ###< symfony/asset-mapper ###
 /node_modules
 /.idea
+.idea
+/public
