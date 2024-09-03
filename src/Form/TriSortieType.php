@@ -20,13 +20,13 @@ class TriSortieType extends AbstractType
             ->add('site', EntityType::class, [
                 'class' => Site::class,
                 'choice_label' => 'nom',
-                'empty_data' => 'default_value' ,
-                'required' => true,
+                'placeholder' => $options['default_site'] || 'Sélectionner un site',
+                'required' => false,
             ])
             ->add('search', SearchType::class, [
                 'label' => 'Le nom de la sortie contient',
                 'required' => false,
-                'attr' => ['placeholder' => 'Rechercher...']
+                'attr' => ['placeholder' => 'Rechercher par nom...']
             ])
             ->add('dateDebut', DateTimeType::class, [
                 'label' => 'Entre ',
