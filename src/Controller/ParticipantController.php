@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Participant;
+use App\Form\CSVUploadType;
 use App\Form\ParticipantType;
 use App\Repository\ParticipantRepository;
+use App\Service\importCSV;
 use App\Service\EnvoiMail;
 use App\Service\GenerateurDeMotDePasse;
 use Doctrine\ORM\EntityManagerInterface;
@@ -145,7 +147,6 @@ class ParticipantController extends AbstractController
 
         return $this->redirectToRoute('app_participant_index', [], Response::HTTP_SEE_OTHER);
     }
-
 
 
 }
