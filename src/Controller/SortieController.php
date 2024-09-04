@@ -57,7 +57,7 @@ class SortieController extends AbstractController
     }
 
     #[Route('/new', name: 'app_sortie_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, ValidatorInterface $validator): Response
+    public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $sortie = new Sortie();
         $form = $this->createForm(SortieType::class, $sortie);
@@ -95,7 +95,7 @@ class SortieController extends AbstractController
 
 
     #[Route('/sortie/edit/{id}', name: 'app_sortie_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Sortie $sortie, EntityManagerInterface $entityManager, ValidatorInterface $validator): Response
+    public function edit(Request $request, Sortie $sortie, EntityManagerInterface $entityManager): Response
     {
         if($this->getUser() !== $sortie->getOrganisateur()){
             return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_FORBIDDEN);
