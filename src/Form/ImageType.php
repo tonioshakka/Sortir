@@ -7,6 +7,7 @@ use App\Entity\Participant;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Vich\UploaderBundle\Form\Type\VichFileType;
 
@@ -18,11 +19,9 @@ class ImageType extends AbstractType
             ->add('imageFile', VichFileType::class,  [
                 'required' => false,
                 'allow_delete' => true,
-                'delete_label' => 'Delete current image',
-                'download_uri' => true,
-                'download_label' => 'Download current image',
                 'asset_helper' => true,
-            ])
+
+                ])
         ;
     }
 

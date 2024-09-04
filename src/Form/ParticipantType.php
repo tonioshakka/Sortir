@@ -32,10 +32,11 @@ class ParticipantType extends AbstractType
             ->add('prenom')
             ->add('telephone')
             ->add('actif')
-//            ->add('image', ImageType::class, [
-//                'label' => 'Profile Picture',
-//                // Configuration spécifique si besoin
-//            ])
+            ->add('image', ImageType::class, [
+                'label' => 'Profile Picture',
+                'required'=>'false'
+                // Configuration spécifique si besoin
+            ])
             ->add('site', EntityType::class, [
                 'class' => Site::class,
                 'choice_label' => 'id',
