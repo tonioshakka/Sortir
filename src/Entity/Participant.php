@@ -67,9 +67,8 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Sortie::class, mappedBy: 'organisateur', orphanRemoval: true)]
     private Collection $mesSorties;
 
-//    #[ORM\OneToOne(mappedBy: 'profil_pic', cascade: ['persist', 'remove'])]
-//    private ?Image $image = null;
-//    private string $Image;
+    #[ORM\OneToOne(mappedBy: 'profil_pic', cascade: ['persist', 'remove'])]
+    private ?Image $image = null;
 
     public function __construct()
     {
@@ -270,15 +269,15 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
 
-//    public function getImage(): ?Image
-//    {
-//        return $this->image;
-//    }
-//
-//    public function setImage(?Image $image): void
-//    {
-//        $this->image = $image;
-//    }
+    public function getImage(): ?Image
+    {
+        return $this->image;
+    }
+
+    public function setImage(?Image $image): void
+    {
+        $this->image = $image;
+    }
 
     public function setId(?int $id): self
     {
@@ -286,13 +285,11 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-
     public function __serialize(): array
     {
         return [
             'id' => $this->getId(),
             'password' => $this->getPassword(),
-
             'email' => $this->getEmail(),
             'userIdentifier' => $this->getEmail(),
             'roles' => $this->getRoles(),
@@ -307,5 +304,9 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
             ->setEmail($data['email'])
             ->setRoles($data['roles']);
     }
+
+
+
+
 
 }
