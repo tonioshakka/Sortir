@@ -9,6 +9,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -22,38 +23,66 @@ class SortieType extends AbstractType
 
         $builder
 
-            ->add('nom')
+            ->add('nom', TextType::class, [
+                'label' => false,
+                'attr' => [
+                    'placeholder' => 'Nom',
+                    'class' => 'still_input_form',
+                ],
+            ])
             ->add('dateHeureDebut', null, [
+                'label' => 'Date debut',
                 'widget' => 'single_text',
             ])
             ->add('duree', IntegerType::class, [
-                'label' => 'Durée en minutes',
-                'required' => false,
+                'label' => false,
+                'attr' => [
+                    'placeholder' => 'Durée en minutes',
+                    'class' => 'still_input_form',
+                ],
             ])
             ->add('dateLimiteInscription', null, [
+                'label' => 'Date limite',
                 'widget' => 'single_text',
                 'required' => false,
             ])
             ->add('nbInscriptionsMax', IntegerType::class, [
-                'label' => 'Nombre de participants maximum',
+                'label' => false,
+                'attr' => [
+                    'placeholder' => 'Nombre d\'inscription max',
+                    'class' => 'still_input_form',
+                ],
                 'required' => false,
             ])
             ->add('infosSortie', TextareaType::class, [
                 'required' => false,
+                'label' => false,
+                'attr' => [
+                    'placeholder' => 'Information sur la sortie',
+                    'class' => 'still_input_form',
+                ]
             ])
             ->add('etat', EntityType::class, [
+                'label' => false,
                 'class' => Etat::class,
                 'choice_label' => 'libelle',
-                'placeholder' => 'Selectionner une etat',
+                'placeholder' => 'Etat',
+                'attr' => [
+                    'class' => 'still_choice_form',
+                ],
             ])
             ->add('lieu', EntityType::class, [
+                'label' => false,
                 'class' => Lieu::class,
                 'required' => false,
                 'mapped' => false,
                 'choice_label' => function($lieu) {
                 return $lieu->getNom() . ' - ' . $lieu->getRue() . ' - ' . $lieu->getVille();
                 },
-                'placeholder' => '-- Selectionner une lieu --',
+                'placeholder' => 'Lieu',
+                'attr' => [
+                    'class' => 'still_choice_form',
+                ],
             ])
             ->add('lieuNew', LieuType::class, [
                 'label' => 'Ajouter un lieu',
