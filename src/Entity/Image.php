@@ -11,30 +11,25 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 #[ORM\Entity(repositoryClass: ImageRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 #[Vich\Uploadable]
-class Image implements \Serializable
+class Image
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-
-
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $imageName = null;
 
-    #[ORM\Column(length: 255)]
+    // Cette propriété doit seulement accepter un File ou null.
 
-    #[Vich\UploadableField(mapping: 'profil_pic', fileNameProperty: 'imageName', size: 'imageSize')]
-
-    private File|string|null $imageFile;
+    #[Vich\UploadableField(mapping: 'profil_pic', fileNameProperty: 'imageName')]
+    private File|null $imageFile = null;
 
     private ?int $imageSize = null;
 
     #[ORM\Column(nullable: true)]
-
     private ?\DateTimeImmutable $updatedAt = null;
-
 
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $createdAt = null;
@@ -42,6 +37,13 @@ class Image implements \Serializable
     #[ORM\OneToOne(inversedBy: 'image', cascade: ['persist', 'remove'])]
     private ?Participant $profil_pic = null;
 
+    public function __construct()
+    {
+        // Si aucune image n'est définie, on assigne l'image par défaut
+        if ($this->imageName === null) {
+            $this->imageName = 'default_profile.png'; // Le nom de l'image par défaut
+        }
+    }
 
     public function getId(): ?int
     {
@@ -53,22 +55,18 @@ class Image implements \Serializable
         return $this->imageName;
     }
 
-    public function setImageName(string $imageName): static
+    public function setImageName(?string $image):self
     {
-        $this->imageName = $imageName;
+        $this->imageName = $image;
 
         return $this;
     }
-
-
-
-
-
     public function getUpdatedAt(): ?\DateTimeImmutable
     {
         return $this->updatedAt;
     }
-    #[ORM\PreUpdate]
+
+
     public function setUpdatedAt(?\DateTimeImmutable $updatedAt): void
     {
         $this->updatedAt = new \DateTimeImmutable('now');
@@ -84,7 +82,7 @@ class Image implements \Serializable
         $this->imageSize = $imageSize;
     }
 
-    #[ORM\PrePersist]
+
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
@@ -103,35 +101,23 @@ class Image implements \Serializable
     public function setProfilPic(?Participant $profil_pic): static
     {
         $this->profil_pic = $profil_pic;
-
         return $this;
     }
+
     public function getImageFile(): ?File
     {
         return $this->imageFile;
     }
 
-    public function setImageFile(File|string|null $imageFile): void
+    public function setImageFile(?File $imageFile): void
     {
         $this->imageFile = $imageFile;
 
         if (null !== $imageFile) {
-            // It is required that at least one field changes if you are using doctrine
-            // otherwise the event listeners won't be called and the file is lost
+            // Actualisation de la date de mise à jour
             $this->updatedAt = new \DateTimeImmutable();
         }
     }
 
-    public function serialize()
-    {
-        $this->imageFile = base64_encode($this->imageFile);
-    }
-#[ORM\PostLoad]
-    public function unserialize($serialized)
-{
-    $this->imageFile = base64_decode($this->imageFile);
-
 
 }
-
-    }

@@ -20,24 +20,38 @@ class TriSortieType extends AbstractType
             ->add('site', EntityType::class, [
                 'class' => Site::class,
                 'choice_label' => 'nom',
-                'data' => $options['default_site'] ,
-                'required' => true,
+                'label' => false,
+                'placeholder' => 'CAMPUS',
+                'required' => false,
+                'attr' => [
+                    'class' => 'still_input_form'
+                ],
             ])
             ->add('search', SearchType::class, [
-                'label' => 'Le nom de la sortie contient',
+                'label' => false,
                 'required' => false,
-                'attr' => ['placeholder' => 'Rechercher par nom...']
+                'attr' => [
+                    'placeholder' => 'Rechercher par nom...',
+                    'class' => 'still_input_form'
+                ]
             ])
             ->add('dateDebut', DateTimeType::class, [
                 'label' => 'Entre ',
+                'placeholder' => 'ENTRE',
                 'widget' => 'single_text',
                 'required' => false,
+                'attr' => [
+                    'class' => 'still_input_form',
+                ],
 
             ])
             ->add('dateFin', DateTimeType::class, [
                 'label' => ' et ',
                 'widget' => 'single_text',
                 'required' => false,
+                'attr' => [
+                    'class' => 'still_input_form',
+                ],
 
             ])
             ->add('etat', ChoiceType::class, [
@@ -47,12 +61,16 @@ class TriSortieType extends AbstractType
                     'Sorties auxquelles je ne suis pas inscrit' => 'non_inscrit',
                     'Sorties passées' => 'passees',
                 ],
+                'label' => false,
                 'required' => false,
                 'multiple' => true,
                 'expanded' => true,
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Filtrer',
+                'attr' => [
+                    'class' => 'still_button_form'
+                ],
             ])
         ;
 
