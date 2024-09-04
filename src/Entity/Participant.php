@@ -69,7 +69,6 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToOne(mappedBy: 'profil_pic', cascade: ['persist', 'remove'])]
     private ?Image $image = null;
-    private string $Image;
 
     public function __construct()
     {
@@ -131,12 +130,12 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see PasswordAuthenticatedUserInterface
      */
-    public function getPassword(): string
+    public function getPassword(): ?string
     {
         return $this->password;
     }
 
-    public function setPassword(string $password): static
+    public function setPassword(?string $password): static
     {
         $this->password = $password;
 
@@ -279,6 +278,34 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->image = $image;
     }
+
+    public function setId(?int $id): self
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    public function __serialize(): array
+    {
+        return [
+            'id' => $this->getId(),
+            'password' => $this->getPassword(),
+            'email' => $this->getEmail(),
+            'userIdentifier' => $this->getEmail(),
+            'roles' => $this->getRoles(),
+        ];
+    }
+
+    public function __unserialize(array $data): void
+    {
+        $this
+            ->setId($data['id'])
+            ->setPassword($data['password'])
+            ->setEmail($data['email'])
+            ->setRoles($data['roles']);
+    }
+
+
 
 
 

@@ -41,10 +41,12 @@
         </tbody>
     </table>
     {% if is_granted('ROLE_ADMIN') %}
+    {{ include('participant/_delete_form.html.twig') }}
         <a class="create_class" href="{{ path('app_participant_index') }}">back to list</a>
     {% endif %}
 
+    {% if is_granted('ROLE_ADMIN') or app.user.id == participant.id %}
+    {% endif %}
     <a class="create_class" href="{{ path('app_participant_edit', {'id': participant.id}) }}">edit</a>
 
-    {{ include('participant/_delete_form.html.twig') }}
 {% endblock %}

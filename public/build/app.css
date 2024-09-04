@@ -555,6 +555,25 @@ body {
     font-family: monospace;
     min-height: 100vh;
 }
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/*****************************************************************************
+                           GENERAL
+ *****************************************************************************/
+body {
+    @apply flex flex-col justify-between;
+    /*background-image: url("../images/logo-b.webp");*/
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    box-sizing: border-box;
+    font-family: monospace;
+    min-height: 100vh;
+
+}
         /****************
             NAV BURGER
         *****************/

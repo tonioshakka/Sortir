@@ -80,7 +80,6 @@ class TriSortieType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => null,
             'default_site' => null, // Ajoute cette option pour passer le site par défaut
         ]);
     }

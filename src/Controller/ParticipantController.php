@@ -10,6 +10,7 @@ use App\Service\GenerateurDeMotDePasse;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -97,17 +98,32 @@ class ParticipantController extends AbstractController
     #[IsGranted("ROLE_USER")]
     public function edit(Request $request, Participant $participant,UserPasswordHasherInterface $passwordHasher ,EntityManagerInterface $entityManager): Response
     {
+        if($this->getUser() !== $participant && $this->isCsrfTokenValid('editer' . $participant->getId(), $request->request->get('_token'))) {
+            return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_FORBIDDEN);
+        }
         $form = $this->createForm(ParticipantType::class, $participant, [
             'email_field' => false,
             ]);
+        $currentPassword = $participant->getPassword();
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $hashedPassword = $passwordHasher->hashPassword($participant, $form->get('password')->getData());
-            $participant->setPassword($hashedPassword);
+
+            $password = $form->get('password')->getData() ? $passwordHasher->hashPassword($participant, $form->get('password')->getData()) : $currentPassword ;
+            $participant->setPassword($password);
+
+
+            $image = $participant->getImage();
+            $image->setProfilPic($participant);
+
+
+
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_participant_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_participant_edit', [
+                'id' => $participant->getId(),
+
+            ], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('participant/edit.html.twig', [

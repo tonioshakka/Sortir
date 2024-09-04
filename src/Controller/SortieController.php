@@ -32,7 +32,6 @@ class SortieController extends AbstractController
     {
         $user = $this->getUser();
         $userSite = $user?->getSite();
-
         $form = $this->createForm(TriSortieType::class, null, [
             'default_site' => $userSite,
         ]);
@@ -98,6 +97,9 @@ class SortieController extends AbstractController
     #[Route('/sortie/edit/{id}', name: 'app_sortie_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Sortie $sortie, EntityManagerInterface $entityManager, ValidatorInterface $validator): Response
     {
+        if($this->getUser() !== $sortie->getOrganisateur()){
+            return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_FORBIDDEN);
+        }
         $form = $this->createForm(SortieType::class, $sortie);
         $form->handleRequest($request);
 
@@ -248,14 +250,9 @@ class SortieController extends AbstractController
 
 
         // Il faut un objet Etat pour le set dans la sortie
-        $etat = $etatRepository->find(2);
+        $etat = $etatRepository->find(7);
 
-        //Avoir le nombre de participant a un événement
-        $countParticipant = $sortie->getParticipant()->count();
-
-
-
-        if($UtilisateurEnCours != $organisateur && $sortie->getEtat()->getId() != 1){
+        if($UtilisateurEnCours != $organisateur && $sortie->getEtat()->getId() != 2){
             return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -270,7 +267,6 @@ class SortieController extends AbstractController
         }
 
         // Update l'état de la sortie, désinscrit les participants et on leur envoi un mail.
-        if($countParticipant >= 1){
             $sortie->setEtat($etat);
             foreach ($sortie->getParticipant() as $gens){
 
@@ -288,7 +284,7 @@ class SortieController extends AbstractController
                     ]);
 
                 $mailer->send($email);
-            }
+
             $entityManager->persist($sortie);
             $entityManager->flush();
 

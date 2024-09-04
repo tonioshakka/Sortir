@@ -55,6 +55,8 @@ class ParticipantType extends AbstractType
             ])
             ->add('actif')
             ->add('image', ImageType::class, [
+                'label' => 'Profile Picture',
+                'required'=>'false'
                 'label' => false,
                 // Configuration spécifique si besoin
             ])
