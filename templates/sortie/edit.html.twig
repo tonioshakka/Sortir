@@ -5,8 +5,8 @@
 {% block body %}
     <h1 class="former-titre">Edit Sortie</h1>
 
-    {{ include('sortie/_form.html.twig', {'button_label': 'Update'}) }}
-    <a class="create_class" href="{{ path('app_sortie_index') }}">back to list</a>
+    {{ include('sortie/_form.html.twig', {'button_label': 'Mise à jour'}) }}
+    <a class="create_class" href="{{ path('app_sortie_index') }}">Retour a la liste des sorties</a>
     <a class="create_class" href="{{ path('app_sortie_form_annuler', {id: sortie.id, token: csrf_token('annuler' ~ sortie.id)}) }}">Annuler</a>
 
     {% if is_granted('ROLE_ADMIN') %}

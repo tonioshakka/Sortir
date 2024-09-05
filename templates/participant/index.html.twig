@@ -8,13 +8,13 @@
     <table class="table-auto">
         <thead>
             <tr>
-                <th>Id</th>
+                <th class="th-responsive">Id</th>
                 <th>Email</th>
-                <th>Roles</th>
-                <th>Nom</th>
-                <th>Prenom</th>
-                <th>Telephone</th>
-                <th>Actif</th>
+                <th class="th-responsive">Roles</th>
+                <th class="th-responsive">Nom</th>
+                <th class="th-responsive">Prenom</th>
+                <th class="th-responsive">Telephone</th>
+                <th class="th-responsive">Actif</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -22,13 +22,13 @@
         {% for participant in participants %}
 
             <tr>
-                <td>{{ participant.id }}</td>
+                <td class="td-responsive">{{ participant.id }}</td>
                 <td>{{ participant.email }}</td>
-                <td>{{ participant.roles ? participant.roles|json_encode : '' }}</td>
-                <td>{{ participant.nom }}</td>
-                <td>{{ participant.prenom }}</td>
-                <td>{{ participant.telephone }}</td>
-                <td>{{ participant.actif ? 'Yes' : 'No' }}</td>
+                <td class="td-responsive">{{ participant.roles ? participant.roles|json_encode : '' }}</td>
+                <td class="td-responsive">{{ participant.nom }}</td>
+                <td class="td-responsive">{{ participant.prenom }}</td>
+                <td class="td-responsive">{{ participant.telephone }}</td>
+                <td class="td-responsive">{{ participant.actif ? 'Yes' : 'No' }}</td>
                 <td>
                     <a class="still_button" href="{{ path('app_participant_show', {'id': participant.id}) }}">Profil</a>
                     <a class="still_button" href="{{ path('app_participant_edit', {'id': participant.id,'_token': csrf_token('editer'~participant.id)}) }}">Modifier</a>
