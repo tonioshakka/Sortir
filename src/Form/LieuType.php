@@ -17,12 +17,12 @@ class LieuType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('ville', TextType::class, [
-                'required' => false
-            ])
             ->add('nom', TextType::class, [
                 'label' => 'Nom',
                 'required' => false,
+            ])
+            ->add('ville', TextType::class, [
+                'required' => false
             ])
             ->add('rue', TextType::class, [
                 'label' => 'Rue',
