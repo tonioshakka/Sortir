@@ -6,10 +6,11 @@
     <h1 class="former-titre">Edit Sortie</h1>
 
     {{ include('sortie/_form.html.twig', {'button_label': 'Mise à jour'}) }}
-    <a class="create_class" href="{{ path('app_sortie_index') }}">Retour a la liste des sorties</a>
-    <a class="create_class" href="{{ path('app_sortie_form_annuler', {id: sortie.id, token: csrf_token('annuler' ~ sortie.id)}) }}">Annuler</a>
-    {{ include('sortie/_delete_form.html.twig') }}
-
+    <div class="placer_btn">
+        <a class="still_button_form" href="{{ path('app_sortie_index') }}">Retour</a>
+        <a class="create_orange" href="{{ path('app_sortie_form_annuler', {id: sortie.id, token: csrf_token('annuler' ~ sortie.id)}) }}">Annuler</a>
+        {{ include('sortie/_delete_form.html.twig') }}
+    <div>
 
 
 {% endblock %}

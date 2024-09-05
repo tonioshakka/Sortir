@@ -25,18 +25,18 @@
             <p>{{ sortie.infosSortie or sortie.motifAnnuler }}</p>
         {% endif %}
     </div>
+    <div class="placer_btn">
+        <a class="still_button_form" href="{{ path('app_sortie_index') }}">Retour</a>
 
-    <a class="create_class" href="{{ path('app_sortie_index') }}">Retour à la liste des sorties</a>
-
-    {% if not isOrganisateur %}
-    {% if (not sortie.participant.contains(participant) and sortie.dateLimiteInscription|date('U') > "now"|date('U') or sortie.dateLimiteInscription is null) and (sortie.nbInscriptionsMax > 0 or sortie.nbInscriptionsMax is null) and sortie.etat.id == 2 %}
-        <a class="create_class" href="{{ path('app_sortie_inscription', {'id': sortie.id , 'token': csrf_token('inscription'~sortie.id)}) }}">S'inscrire</a>
-    {% endif %}
-    {% if (sortie.participant.contains(participant) and (sortie.dateLimiteInscription|date('U') > "now"|date('U') or sortie.dateLimiteInscription is null) and sortie.dateHeureDebut|date('U') > "now"|date('U') )and sortie.etat.id == 2 %}
-        <a class="create_class" href="{{ path('app_sortie_desistement', {'id': sortie.id , 'token': csrf_token('desistement'~sortie.id)}) }}">Annuler mon inscription</a>
-    {% endif %}
-    {% endif %}
-
+        {% if not isOrganisateur %}
+        {% if (not sortie.participant.contains(participant) and sortie.dateLimiteInscription|date('U') > "now"|date('U') or sortie.dateLimiteInscription is null) and (sortie.nbInscriptionsMax > 0 or sortie.nbInscriptionsMax is null) and sortie.etat.id == 2 %}
+            <a class="create_vert" href="{{ path('app_sortie_inscription', {'id': sortie.id , 'token': csrf_token('inscription'~sortie.id)}) }}">S'inscrire</a>
+        {% endif %}
+        {% if (sortie.participant.contains(participant) and (sortie.dateLimiteInscription|date('U') > "now"|date('U') or sortie.dateLimiteInscription is null) and sortie.dateHeureDebut|date('U') > "now"|date('U') )and sortie.etat.id == 2 %}
+            <a class="create_rouge" href="{{ path('app_sortie_desistement', {'id': sortie.id , 'token': csrf_token('desistement'~sortie.id)}) }}">Annuler mon inscription</a>
+        {% endif %}
+        {% endif %}
+    </div>
     <div class="former_form">
         <h3 class="titre-3">Participants inscrits :</h3>
         <ul>

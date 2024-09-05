@@ -14,7 +14,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/lieu')]
 #[IsGranted("ROLE_USER")]
-class LieuController extends AbstractController
+class   LieuController extends AbstractController
 {
     #[Route('/', name: 'app_lieu_index', methods: ['GET'])]
     public function index(LieuRepository $lieuRepository): Response

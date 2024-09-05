@@ -30,8 +30,8 @@
                 <td class="td-responsive">{{ participant.telephone }}</td>
                 <td class="td-responsive">{{ participant.actif ? 'Yes' : 'No' }}</td>
                 <td>
-                    <a class="still_button" href="{{ path('app_participant_show', {'id': participant.id}) }}">Profil</a>
-                    <a class="still_button" href="{{ path('app_participant_edit', {'id': participant.id}) }}">Modifier</a>
+                    <a class="create_vert_table" href="{{ path('app_participant_show', {'id': participant.id}) }}">Profil</a>
+                    <a class="create_orange_table" href="{{ path('app_participant_edit', {'id': participant.id}) }}">Modifier</a>
                 </td>
             </tr>
         {% else %}
@@ -41,5 +41,7 @@
         {% endfor %}
         </tbody>
     </table>
+    <div class="placer_btn">
         <a class="create_class" href="{{ path('app_participant_new') }}">Crée un nouveaux participant</a>
+    </div>
 {% endblock %}

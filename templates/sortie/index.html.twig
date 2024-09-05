@@ -43,9 +43,9 @@
 {#              <td>{{ sortie.inscrit }}</td>#}
                 <td class="td-responsive"><a href={{ path('app_participant_show', {'id': sortie.organisateur.id}) }}>{{ sortie.organisateur.nom }} {{ sortie.organisateur.prenom }}</a></td>
                 <td>
-                    <a class="still_button" href="{{ path('app_sortie_show', {'id': sortie.id}) }}">Voir</a>
+                    <a class="create_vert_table" href="{{ path('app_sortie_show', {'id': sortie.id}) }}">Voir</a>
                     {% if is_granted('ROLE_ADMIN') or app.user.id == sortie.organisateur.id %}
-                        <a class="still_button" href="{{ path('app_sortie_edit', {'id': sortie.id}) }}">Modifier</a>
+                        <a class="create_orange_table" href="{{ path('app_sortie_edit', {'id': sortie.id}) }}">Modifier</a>
                     {% endif %}
 
 
@@ -58,6 +58,7 @@
         {% endfor %}
         </tbody>
     </table>
-
-    <a class="create_class" href="{{ path('app_sortie_new') }}">Crée un nouvelle sortie</a>
+    <div class="placer_btn">
+        <a class="create_class" href="{{ path('app_sortie_new') }}">Crée un nouvelle sortie</a>
+    </div>
 {% endblock %}
