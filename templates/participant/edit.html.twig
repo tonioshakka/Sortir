@@ -12,6 +12,7 @@
     {% endif %}
 
     {% if is_granted('ROLE_ADMIN') %}
-        <a href="{{ path('app_participant_edit', {'id': participant.id, 'token': csrf_token('editer'~participant.id)}) }}">Supprimer la sortie</a>
+        <a href="{{ path('app_participant_delete', {'id': participant.id, 'token': csrf_token('delete'~participant.id)}) }}">Supprimer le participant</a>
+        <a href="{{ path('app_participant_inactif',{'id': participant.id,'_token': csrf_token('inactif'~participant.id)}) }}" >désactiver test</a>
     {% endif %}
 {% endblock %}

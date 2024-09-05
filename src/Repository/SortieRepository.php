@@ -11,6 +11,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class SortieRepository extends ServiceEntityRepository
 {
+
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Sortie::class);
@@ -94,6 +96,17 @@ class SortieRepository extends ServiceEntityRepository
         $qb->andWhere('s.dateHeureDebut > :dateLimit')->setParameter('dateLimit', $dateLimit);
     return $qb->getQuery()->getResult();
 }
+
+    public function removeParticipantFromSorties($participant): void
+    {
+        $query = $this->getEntityManager()->createQuery(
+            'DELETE FROM App\Entity\Sortie s
+        WHERE :participant MEMBER OF s.participant'
+        )->setParameter('participant', $participant);
+
+        $query->execute();
+    }
+
 
 
 
