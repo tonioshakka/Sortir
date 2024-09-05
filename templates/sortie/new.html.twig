@@ -10,10 +10,12 @@
     <h1 class="former-titre">Cree une nouvelle sortie</h1>
 
     {{ include('sortie/_form.html.twig') }}
+    <div class="placer_btn">
+        <a class="still_button_form" href="{{ path('app_sortie_index') }}">Retour</a>
+    </div>
+
     <div id="mapContainer">
         {{ render_map(map, { style: 'height: 600px' }) }}
     </div>
-    <a class="create_class" href="{{ path('app_sortie_index') }}">back to list</a>
 
-    <a class="create_class" href="{{ path('app_sortie_index') }}">Retour a la liste des sorties</a>
 {% endblock %}

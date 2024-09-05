@@ -4,11 +4,13 @@
 {% block title %}Importer un fichier CSV{% endblock %}
 
 {% block body %}
-    <h2>Importer un fichier CSV</h2>
-
-    {{ form_start(form) }}
-    {{ form_row(form.csv_file) }}
-    <button class="btn btn-primary">Importer</button>
-    {{ form_end(form) }}
-
+    <h1 class="former-titre">Importer un fichier CSV</h1>
+    <div class="form-container">
+        {{ form_start(form) }}
+        {{ form_row(form.csv_file) }}
+        {{ form_end(form) }}
+    </div>
+    <div class="placer_btn">
+        <button class="still_button_form">Importer</button>
+    </div>
 {% endblock %}

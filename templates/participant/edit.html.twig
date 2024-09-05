@@ -5,13 +5,11 @@
 {% block body %}
     <h1 class="former-titre">Gestion de profil</h1>
 
-    {{ include('participant/_form.html.twig', {'button_label': 'Mise à jour'}) }}
-
-    {% if is_granted('ROLE_ADMIN') %}
-        <a class="create_class" href="{{ path('app_participant_index') }}">Retour a la liste des participants</a>
-    {% endif %}
-
-    {% if is_granted('ROLE_ADMIN') %}
-        <a class="create_class" href="{{ path('app_participant_edit', {'id': participant.id, 'token': csrf_token('editer'~participant.id)}) }}">Supprimer le participant</a>
-    {% endif %}
+        {{ include('participant/_form.html.twig', {'button_label': 'Mise à jour'}) }}
+    <div class="placer_btn">
+            <a class="still_button_form" href="{{ path('app_participant_index') }}">Retour</a>
+        {% if is_granted('ROLE_ADMIN') %}
+            <a class="create_rouge" href="{{ path('app_participant_edit', {'id': participant.id, 'token': csrf_token('editer'~participant.id)}) }}">Supprimer</a>
+        {% endif %}
+    </div>
 {% endblock %}

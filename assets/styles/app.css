@@ -7,8 +7,11 @@
                            GENERAL
  *****************************************************************************/
 body {
-    @apply flex flex-col justify-between;
-    /*background-image: url("../images/logo-b.webp");*/
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    background-image: url("../images/logo-b.webp");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -16,6 +19,17 @@ body {
     font-family: monospace;
     min-height: 100vh;
 
+}
+.former-titre, .form-container, .table-auto, .footer{
+    margin: 20px 0;
+    text-align: center;
+}
+.placer_btn {
+    display: flex;
+    justify-content: center; /* Centrer les boutons horizontalement */
+    flex-direction: row;
+    gap: 10px; /* Ajouter un espace entre les boutons */
+    margin: 10px;
 }
         /****************
             NAV BURGER
@@ -91,30 +105,13 @@ header {
 .nav-list {
     list-style-type: none;
 }
-@media (max-width: 768px) {
-    .nav {
-        width: 30%; /* Adapte la largeur pour les tablettes */
-    }
-}
-
-@media (max-width: 480px) {
-    .nav {
-        width: 30%; /* Pleine largeur pour les petits écrans mobiles */
-    }
-
-    .menu-btn {
-        width: 25px; /* Réduit la taille de l'icône burger pour mobile */
-        height: 25px;
-    }
-
-    .menu-btn .bar {
-        width: 25px;
-        height: 3px;
-    }
-}
         /**********************/
 main{
-    @apply flex flex-col justify-center m-auto w-4/5;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: auto;
+    width: 80%;
 }
 img{
     width: 100%;
@@ -122,19 +119,9 @@ img{
     object-fit: cover;
 }
 input, textarea{
-    @apply text-black;
+    color: black;
 }
-.button{
-    border: 2px solid #ffffff;
-    padding: 10px;
-    background-color: rgba(97, 195, 195, 0.1);
-    text-shadow:
-            -1px -1px 0 #000,
-            1px -1px 0 #000,
-            -1px  1px 0 #000,
-            1px  1px 0 #000; /* Simule une bordure noire autour des lettres */
-    border-radius: 15px;
-}
+
 /********************************
     AFFICHAGE DES TABLEAUX
 *********************************/
@@ -144,8 +131,8 @@ input, textarea{
     width: 100%;
 }
 .table-auto th{
-    @apply text-slate-950 p-2 text-left;
-    width: 100%;
+    color: rgb(2 6 23 / var(--tw-text-opacity));
+    padding: 0.5rem;
     border-collapse: collapse;
     border-spacing: 0;
     border: 2px solid black;
@@ -158,7 +145,6 @@ input, textarea{
     text-align: center;
 }
 .table-auto td{
-    @apply p-2 text-center;
     border: 2px solid black;
     color: white;
     text-shadow:
@@ -168,18 +154,40 @@ input, textarea{
             1px  1px 0 #3f5876; /* Simule une bordure noire autour des lettres */
     width: 50px; /* Ajuster cette valeur en fonction du contenu */
     text-align: center;
+    padding: 0.5rem;
 }
-/* ------- */
-/* Media queries pour ajuster les styles sur les petits écrans */
-@media (max-width: 768px) {
-    .th-responsive{
-        display: none;
-    }
-    .td-responsive{
-        display: none;
-    }
-    /* Pour que chaque ligne du tableau devienne un bloc sur petit écran */
-
+.create_vert_table{
+    text-decoration: none;
+    color: green;
+    text-align: center;
+    padding: 2px 2px;
+    max-width: 200px;
+}
+.create_vert_table:hover{
+    background-color: green;
+    color: white;
+}
+.create_orange_table{
+    text-decoration: none;
+    color: orange;
+    text-align: center;
+    padding: 2px 2px;
+    max-width: 200px;
+}
+.create_orange_table:hover{
+    background-color: orange;
+    color: white;
+}
+.create_rouge_table{
+    text-decoration: none;
+    color: red;
+    text-align: center;
+    padding: 2px 2px;
+    max-width: 200px;
+}
+.create_rouge_table:hover{
+    background-color: #fb0202;
+    color: white;
 }
 /****************
     FOOTER
@@ -202,7 +210,11 @@ input, textarea{
                            HEADER
  *****************************************************************************/
 .image-logo{
-    @apply w-1/12 py-2 px-2;
+    width: 8%;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
     display: flex;
     justify-content: center;
     height: 150px;
@@ -213,14 +225,20 @@ input, textarea{
                 LOGIN
 **************************************************/
 .form-container{
-    @apply text-center flex flex-col justify-center items-center p-5;
-    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1.25rem;
+    text-align: center;
+    max-width: 300px;
     margin: 0 auto;
     border: 2px solid #ffffff;
     border-radius: 15px;
     background-color: rgba(105, 145, 145, 0.8);
     color: white;
     font-size: 1.1em;
+    width: 100%;
 }
 #remember{
     text-shadow:
@@ -234,7 +252,9 @@ input, textarea{
     text-align: center;
 }
 .form-control::placeholder {
-    @apply text-gray-700 text-center;
+    --tw-text-opacity: 1;
+    color: rgb(55 65 81 / var(--tw-text-opacity));
+    text-align: center;
 }
 /********************************
     CLASS LIENS CREATE USER/SORTIE
@@ -244,13 +264,59 @@ input, textarea{
     border-radius: 15px;
     background-color: rgba(105, 145, 145, 0.8);
     text-decoration: none;
-    color: white;
+    color: #006887;
     text-align: center;
     padding: 2px 2px;
     max-width: 200px;
 }
 .create_class:hover {
     background-color: #0056b3;
+    color: white;
+}
+/*******************************
+    LIEN VERT/ROUGE/ORANGE
+********************************/
+.create_vert{
+    border: 2px solid white;
+    border-radius: 15px;
+    background-color: rgba(105, 145, 145, 0.8);
+    text-decoration: none;
+    color: green;
+    text-align: center;
+    padding: 2px 2px;
+    max-width: 200px;
+}
+.create_vert:hover{
+    background-color: green;
+    color: white;
+}
+.create_rouge{
+    border: 2px solid white;
+    border-radius: 15px;
+    background-color: rgba(105, 145, 145, 0.8);
+    text-decoration: none;
+    color: #fb0202;
+    text-align: center;
+    padding: 2px 2px;
+    max-width: 200px;
+}
+.create_rouge:hover{
+    background-color: #fb0202;
+    color: white;
+}
+.create_orange{
+    border: 2px solid white;
+    border-radius: 15px;
+    background-color: rgba(105, 145, 145, 0.8);
+    text-decoration: none;
+    color: orange;
+    text-align: center;
+    padding: 2px 2px;
+    max-width: 200px;
+}
+.create_orange:hover{
+    background-color: orange;
+    color: white;
 }
 /********************************
     CLASS LIENS EDIT/SHOW USER/SORTIE
@@ -282,12 +348,14 @@ input, textarea{
     font-size: 1.2rem;
 }
 .still_button_form {
-    border: 1px solid white;
+    border: 2px solid white;
     border-radius: 15px;
+    background-color: rgba(105, 145, 145, 0.8);
     text-decoration: none;
     color: #0056b3;
-    width: 8%;
-    font-weight: bold;
+    text-align: center;
+    padding: 2px 2px;
+    max-width: 200px;
 }
 .still_button_form:hover {
     background-color: #0056b3;
@@ -298,20 +366,38 @@ input, textarea{
     color: black;
 }
 .still_input_form::placeholder {
-    @apply text-gray-700 text-center;
+    --tw-text-opacity: 1;
+    color: rgb(55 65 81 / var(--tw-text-opacity));
+    text-align: center;
 }
 .btn{
     border: 2px solid white;
     border-radius: 15px;
     background-color: rgba(105, 145, 145, 0.8);
     text-decoration: none;
-    color: white;
+    color: red;
     text-align: center;
     padding: 2px 2px;
     max-width: 200px;
 }
 .btn:hover{
-    background-color: #0056b3;
+    background-color: red;
+    color: white;
+}
+.btn_save{
+    border: 2px solid white;
+    border-radius: 15px;
+    background-color: rgba(105, 145, 145, 0.8);
+    text-decoration: none;
+    color: green;
+    text-align: center;
+    padding: 2px 2px;
+    max-width: 200px;
+    margin-top: 3px;
+}
+.btn_save:hover{
+    background-color: green;
+    color: white;
 }
 .still_choice_form {
     border-radius: 15px;
@@ -322,4 +408,40 @@ input, textarea{
 *****************************/
 .titre-3{
     color: #fb0202;
+}
+/*****************************
+    RESPONSIVITER
+******************************/
+@media (max-width: 768px) {
+    .form-container {
+        width: 100%;
+    }
+    .nav {
+        width: 30%; /* Adapte la largeur pour les tablettes */
+    }
+
+}
+@media (max-width: 480px) {
+    .form-container {
+        width: 90%;
+    }
+    .th-responsive{
+        display: none;
+    }
+    .td-responsive{
+        display: none;
+    }
+    .nav {
+        width: 30%; /* Pleine largeur pour les petits écrans mobiles */
+    }
+
+    .menu-btn {
+        width: 25px; /* Réduit la taille de l'icône burger pour mobile */
+        height: 25px;
+    }
+
+    .menu-btn .bar {
+        width: 25px;
+        height: 3px;
+    }
 }

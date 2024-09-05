@@ -7,7 +7,7 @@
         <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
     {% endfor %}
     <div class="form-container">
-        <h1>Reset le mot de passe</h1>
+        <h1 class="former-titre">Reset le mot de passe</h1>
         {{ form_start(requestForm) }}
             {{ form_row(requestForm.email) }}
             <div>
@@ -17,7 +17,9 @@
                     passe
                 </small>
             </div>
+        {{ form_end(requestForm) }}
     </div>
-        <button class="btn btn-primary">Réinitialiser le mot passe</button>
-    {{ form_end(requestForm) }}
+    <div class="placer_btn">
+        <button class="create_rouge">Réinitialiser le mot passe</button>
+    </div>
 {% endblock %}
