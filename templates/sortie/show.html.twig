@@ -3,61 +3,53 @@
 {% block title %}Sortie{% endblock %}
 
 {% block body %}
-    <h2>{{ sortie.nom }}</h2>
+    <h1 class="former-titre">{{ sortie.nom }}</h1>
 
-    <div class="sortie-info">
+    <div class="former_form">
         <ul id="sortie_data">
-            <li class="sortie-data"><span class="sortie-field">Date et Heure :</span><span class="sortie-value">{{ sortie.dateHeureDebut | date('d/m/Y H\hi') }}</span></li>
-            <li class="sortie-data"><span class="sortie-field"></span>ville :<span class="sortie-value">{{ sortie.lieu.ville }}</span></li>
-            <li class="sortie-data"><span class="sortie-field">rue :</span><span class="sortie-value"> {{ sortie.lieu.rue }}</span></li>
+            <li class="sortie-data"><span class="sortie-value">{{ sortie.dateHeureDebut | date('d F Y H:i:s') }}</span></li>
+            <li class="sortie-data"><span class="sortie-value">{{ sortie.lieu.ville }}</span></li>
+            <li class="sortie-data"><span class="sortie-value"> {{ sortie.lieu.rue }}</span></li>
             {% if sortie.dateLimiteInscription %}
-                <li class="sortie-data"><span class="sortie-field"></span>Clôture<span class="sortie-value">{{ sortie.dateLimiteInscription | date('d/m/Y H\hi') }}</span></li>
+                <li class="sortie-data"><span class="sortie-field">Clôture: </span><span class="sortie-value">{{ sortie.dateLimiteInscription | date('d F Y H:i:s') }}</span></li>
             {% endif %}
             {% if sortie.nbInscriptionsMax %}
-                <li class="sortie-data"><span class="sortie-field"></span>Nombre de places :<span class="sortie-value">{{ sortie.nbInscriptionsMax }}</span></li>
+                <li class="sortie-data"><span class="sortie-value">{{ sortie.nbInscriptionsMax }} place</span></li>
             {% endif %}
             {% if sortie.duree %}
-                <li class="sortie-data"><span class="sortie-field"></span>Durée :<span class="sortie-value">{{ sortie.duree }}</span></li>
+                <li class="sortie-data"><span class="sortie-value">{{ sortie.duree }} minutes</span></li>
             {% endif %}
         </ul>
         {% if sortie.infosSortie %}
             <h3>Description et info</h3>
-            <p>{{ sortie.infosSortie or sortie.motifAnnuler }}</p>
+           <p>{{ sortie.infosSortie }}</p>
+
+        {% else %}
+        <p>{{ sortie.motifAnnuler }}</p>
         {% endif %}
     </div>
 
-    <a href="{{ path('app_sortie_index') }}">Retour à la liste</a>
+    <a class="create_class" href="{{ path('app_sortie_index') }}">Retour à la liste des sorties</a>
 
     {% if not isOrganisateur %}
     {% if (not sortie.participant.contains(participant) and sortie.dateLimiteInscription|date('U') > "now"|date('U') or sortie.dateLimiteInscription is null) and (sortie.nbInscriptionsMax > 0 or sortie.nbInscriptionsMax is null) and sortie.etat.id == 2 %}
-        <a href="{{ path('app_sortie_inscription', {'id': sortie.id , 'token': csrf_token('inscription'~sortie.id)}) }}">S'inscrire</a>
+        <a class="create_class" href="{{ path('app_sortie_inscription', {'id': sortie.id , 'token': csrf_token('inscription'~sortie.id)}) }}">S'inscrire</a>
     {% endif %}
     {% if (sortie.participant.contains(participant) and (sortie.dateLimiteInscription|date('U') > "now"|date('U') or sortie.dateLimiteInscription is null) and sortie.dateHeureDebut|date('U') > "now"|date('U') )and sortie.etat.id == 2 %}
-        <a href="{{ path('app_sortie_desistement', {'id': sortie.id , 'token': csrf_token('desistement'~sortie.id)}) }}">Annuler mon inscription</a>
+        <a class="create_class" href="{{ path('app_sortie_desistement', {'id': sortie.id , 'token': csrf_token('desistement'~sortie.id)}) }}">Annuler mon inscription</a>
     {% endif %}
     {% endif %}
 
-
-
-
-    {% if isOrganisateur %}
-        <a href="{{ path('app_sortie_edit', {'id': sortie.id}) }}">Éditer</a>
-    {% endif %}
-
-    {% if is_granted('ROLE_ADMIN') %}
-        <a href="{{ path('app_sortie_delete', {'id': sortie.id, 'token': csrf_token('supprimerSortie'~sortie.id)}) }}">Supprimer la sortie</a>
-    {% endif %}
-
-
-    <h3>Participants inscrits</h3>
-    <ul>
-        {% for participant in sortie.participant %}
-            <li>
-                <a href="{{ path('app_participant_show', { 'id': participant.id }) }}">
-                    {{ participant.nom }} {{ participant.prenom }}
-                </a>
-            </li>
-        {% endfor %}
-    </ul>
-
+    <div class="former_form">
+        <h3 class="titre-3">Participants inscrits :</h3>
+        <ul>
+            {% for participant in sortie.participant %}
+                <li>
+                    <a href="{{ path('app_participant_show', { 'id': participant.id }) }}">
+                        {{ participant.nom }} {{ participant.prenom }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
 {% endblock %}

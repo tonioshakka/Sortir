@@ -21,6 +21,9 @@ class LieuType extends AbstractType
                 'label' => 'Nom',
                 'required' => false,
             ])
+            ->add('ville', TextType::class, [
+                'required' => false
+            ])
             ->add('rue', TextType::class, [
                 'label' => 'Rue',
                 'required' => false,
@@ -32,9 +35,6 @@ class LieuType extends AbstractType
             ->add('longitude', NumberType::class, [
                 'label' => 'Longitude',
                 'required' => false,
-            ])
-            ->add('ville', TextType::class, [
-                'required' => false
             ])
         ;
     }

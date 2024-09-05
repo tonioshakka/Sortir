@@ -19,6 +19,8 @@ security:
             remember_me:
                 secret: '%kernel.secret%'
                 lifetime: 604800 #1 semaine
+            user_checker: App\Security\UserChecker
+
             form_login:
                 login_path: app_login
                 check_path: app_login
@@ -29,6 +31,8 @@ security:
                 target: app_login
                 # where to redirect after logout
                 # target: app_any_route
+
+
 
 
             # activate different ways to authenticate

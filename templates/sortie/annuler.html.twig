@@ -3,14 +3,15 @@
 {% block title %}Annulation Sortie{% endblock %}
 
 {% block body %}
-    <h1>Annuler la sortie</h1>
+    <h1 class="former-titre">Annuler la sortie</h1>
 
 
-    {{ form_start(form) }}
-    {{ form_widget(form) }}
-    {{ form_end(form) }}
+        {{ form_start(form) }}
+        {{ form_widget(form,{ 'attr':{'class': 'former_form' }}) }}
+        {{ form_end(form) }}
 
-    <a href="{{ path('app_sortie_index') }}">back to list</a>
+
+    <a class="create_class" href="{{ path('app_sortie_index') }}">Retour a là liste</a>
 
 
 {% endblock %}

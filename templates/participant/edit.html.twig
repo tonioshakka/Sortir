@@ -3,15 +3,15 @@
 {% block title %}Edit Participant{% endblock %}
 
 {% block body %}
-    <h1>Gestion de profil</h1>
+    <h1 class="former-titre">Gestion de profil</h1>
 
-    {{ include('participant/_form.html.twig', {'button_label': 'Update'}) }}
+    {{ include('participant/_form.html.twig', {'button_label': 'Mise à jour'}) }}
 
     {% if is_granted('ROLE_ADMIN') %}
-        <a href="{{ path('app_participant_index') }}">back to list</a>
+        <a class="create_class" href="{{ path('app_participant_index') }}">Retour a la liste des participants</a>
     {% endif %}
 
     {% if is_granted('ROLE_ADMIN') %}
-        <a href="{{ path('app_sortie_delete', {'id': sortie.id, 'token': csrf_token('supprimerSortie'~sortie.id)}) }}">Supprimer la sortie</a>
+        <a class="create_class" href="{{ path('app_participant_edit', {'id': participant.id, 'token': csrf_token('editer'~participant.id)}) }}">Supprimer le participant</a>
     {% endif %}
 {% endblock %}

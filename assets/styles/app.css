@@ -78,6 +78,7 @@ header {
     background: rgb(9, 15, 16, 0.8);
     transform: translateX(100%); /* Cache le menu en dehors de l'écran */
     transition: transform 0.5s;
+    text-decoration: none;
     z-index: 1; /* Pour que le menu soit derrière le bouton */
     font-family: monospace, cursive;
     color: #fb0202;
@@ -138,17 +139,23 @@ input, textarea{
     AFFICHAGE DES TABLEAUX
 *********************************/
 .table-auto{
-    @apply table-auto border-collapse mt-5;
+    border-collapse: collapse;
+    background-color: rgba(105, 145, 145, 0.8);
     width: 100%;
 }
 .table-auto th{
     @apply text-slate-950 p-2 text-left;
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
     border: 2px solid black;
     text-shadow:
             -1px -1px 0 #ffffff,
             1px -1px 0 #ffffff,
             -1px  1px 0 #ffffff,
             1px  1px 0 #ffffff; /* Simule une bordure noire autour des lettres */
+    width: 50px; /* Ajuster cette valeur en fonction du contenu */
+    text-align: center;
 }
 .table-auto td{
     @apply p-2 text-center;
@@ -159,6 +166,20 @@ input, textarea{
             1px -1px 0 #266887,
             -1px  1px 0 #3f5876,
             1px  1px 0 #3f5876; /* Simule une bordure noire autour des lettres */
+    width: 50px; /* Ajuster cette valeur en fonction du contenu */
+    text-align: center;
+}
+/* ------- */
+/* Media queries pour ajuster les styles sur les petits écrans */
+@media (max-width: 768px) {
+    .th-responsive{
+        display: none;
+    }
+    .td-responsive{
+        display: none;
+    }
+    /* Pour que chaque ligne du tableau devienne un bloc sur petit écran */
+
 }
 /****************
     FOOTER
@@ -192,7 +213,7 @@ input, textarea{
                 LOGIN
 **************************************************/
 .form-container{
-    @apply text-center flex flex-col justify-center p-5;
+    @apply text-center flex flex-col justify-center items-center p-5;
     max-width: 400px;
     margin: 0 auto;
     border: 2px solid #ffffff;
@@ -214,4 +235,91 @@ input, textarea{
 }
 .form-control::placeholder {
     @apply text-gray-700 text-center;
+}
+/********************************
+    CLASS LIENS CREATE USER/SORTIE
+ ********************************/
+.create_class {
+    border: 2px solid white;
+    border-radius: 15px;
+    background-color: rgba(105, 145, 145, 0.8);
+    text-decoration: none;
+    color: white;
+    text-align: center;
+    padding: 2px 2px;
+    max-width: 200px;
+}
+.create_class:hover {
+    background-color: #0056b3;
+}
+/********************************
+    CLASS LIENS EDIT/SHOW USER/SORTIE
+ ********************************/
+.still_button {
+    border: 1px solid white;
+    border-radius: 15px;
+    text-decoration: none;
+}
+.still_button:hover {
+    background-color: #0056b3;
+}
+/**************
+ FORME DES TITRE
+***************/
+.former-titre{
+    font-size: 3rem;
+    font-family: Chalkduster, fantasy;
+}
+/**************************
+    MISE EN FORME DU FORM
+***************************/
+.former_form{
+    border: 2px solid white;
+    background-color: rgba(105, 145, 145, 0.8);
+    border-radius: 15px;
+    text-align: center;
+    font-family: Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif;
+    font-size: 1.2rem;
+}
+.still_button_form {
+    border: 1px solid white;
+    border-radius: 15px;
+    text-decoration: none;
+    color: #0056b3;
+    width: 8%;
+    font-weight: bold;
+}
+.still_button_form:hover {
+    background-color: #0056b3;
+    color: white;
+}
+.still_input_form{
+    border-radius: 10px;
+    color: black;
+}
+.still_input_form::placeholder {
+    @apply text-gray-700 text-center;
+}
+.btn{
+    border: 2px solid white;
+    border-radius: 15px;
+    background-color: rgba(105, 145, 145, 0.8);
+    text-decoration: none;
+    color: white;
+    text-align: center;
+    padding: 2px 2px;
+    max-width: 200px;
+}
+.btn:hover{
+    background-color: #0056b3;
+}
+.still_choice_form {
+    border-radius: 15px;
+    text-align: center;
+}
+/*****************************
+    SWOH->PARTICIPANT INSCRIT
+*****************************/
+.titre-3{
+    color: #fb0202;
 }

@@ -3,15 +3,22 @@
 namespace App\Controller;
 
 use App\Entity\Participant;
+use App\Entity\Sortie;
+use App\Form\CSVUploadType;
 use App\Form\ParticipantType;
 use App\Repository\ParticipantRepository;
+use App\Repository\SortieRepository;
+use App\Service\AnnulerSortie;
+use App\Service\importCSV;
 use App\Service\EnvoiMail;
 use App\Service\GenerateurDeMotDePasse;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -97,7 +104,7 @@ class ParticipantController extends AbstractController
     #[IsGranted("ROLE_USER")]
     public function edit(Request $request, Participant $participant,UserPasswordHasherInterface $passwordHasher ,EntityManagerInterface $entityManager): Response
     {
-        if($this->getUser() !== $participant){
+        if($this->getUser() !== $participant && $this->isCsrfTokenValid('editer' . $participant->getId(), $request->request->get('_token'))) {
             return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_FORBIDDEN);
         }
         $form = $this->createForm(ParticipantType::class, $participant, [
@@ -111,9 +118,18 @@ class ParticipantController extends AbstractController
             $password = $form->get('password')->getData() ? $passwordHasher->hashPassword($participant, $form->get('password')->getData()) : $currentPassword ;
             $participant->setPassword($password);
 
+
+            $image = $participant->getImage();
+            $image->setProfilPic($participant);
+
+
+
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_participant_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_participant_edit', [
+                'id' => $participant->getId(),
+
+            ], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('participant/edit.html.twig', [
@@ -122,30 +138,56 @@ class ParticipantController extends AbstractController
         ]);
     }
 
-    #[Route('/delete/{id}', name: 'app_participant_delete', methods: ['POST'])]
+    #[Route('/delete/{id}', name: 'app_participant_delete', methods: ['GET'])]
     #[IsGranted("ROLE_ADMIN")]
     public function delete(Request $request, Participant $participant, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$participant->getId(), $request->getPayload()->getString('_token'))) {
+        $token = $request->query->get('token');
+
+        if ($this->isCsrfTokenValid('delete' . $participant->getId(), $token)) {
+
             $entityManager->remove($participant);
             $entityManager->flush();
+            return $this->redirectToRoute('app_participant_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->redirectToRoute('app_participant_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_participant_edit', [
+            'id' => $participant->getId(),
+        ], Response::HTTP_SEE_OTHER);
+
+
     }
 
-    #[Route('/inactif/{id}', name: 'app_participant_inactif', methods: ['POST'])]
+    /**
+     * @throws TransportExceptionInterface
+     */
+    #[Route('/inactif/{id}', name: 'app_participant_inactif', methods: ['GET'])]
     #[IsGranted("ROLE_USER")]
-    public function inactif(Request $request, Participant $participant, EntityManagerInterface $entityManager): Response
+    public function inactif(Request $request, Participant $participant, EntityManagerInterface $entityManager, SortieRepository $sortieRepository, AnnulerSortie $annulerSortie): Response
     {
-        if ($this->isCsrfTokenValid('inactif'.$participant->getId(), $request->getPayload()->getString('_token'))) {
+
+
+        if ($this-> isCsrfTokenValid('inactif'.$participant->getId(), $request->query->get('_token'))) {
+
+            $sortiesEnTantQuOrganisateur= $sortieRepository->find($participant->getId());
+
+
+
+            // Si le participant est organisateur de sorties, on les annule et les supprime
+            if (!empty($sortiesEnTantQuOrganisateur)) {
+                foreach ($sortiesEnTantQuOrganisateur as $sortie) {
+                    $annulerSortie->annuler($sortie);
+                    $entityManager->remove($sortie);
+                }
+            }
+
+            $sortieRepository->removeParticipantFromSorties($participant);
             $participant->setActif(false);
             $entityManager->flush();
         }
 
         return $this->redirectToRoute('app_participant_index', [], Response::HTTP_SEE_OTHER);
     }
-
 
 
 }
