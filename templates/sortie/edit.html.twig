@@ -10,7 +10,9 @@
         <a class="still_button_form" href="{{ path('app_sortie_index') }}">Retour</a>
         <a class="create_orange" href="{{ path('app_sortie_form_annuler', {id: sortie.id, token: csrf_token('annuler' ~ sortie.id)}) }}">Annuler</a>
         {{ include('sortie/_delete_form.html.twig') }}
-    <div>
-
+    {% if is_granted('ROLE_ADMIN') %}
+        <a href="{{ path('app_sortie_delete', {'id': sortie.id, 'token': csrf_token('supprimerSortie'~sortie.id)}) }}">Supprimer la sortie</a>
+    {% endif %}
+        <div>
 
 {% endblock %}

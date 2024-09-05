@@ -32,6 +32,7 @@
                 <td>
                     <a class="create_vert_table" href="{{ path('app_participant_show', {'id': participant.id}) }}">Profil</a>
                     <a class="create_orange_table" href="{{ path('app_participant_edit', {'id': participant.id}) }}">Modifier</a>
+                    <a class="create_rouge_table" href="{{ path('app_participant_inactif', {id: participant.id,_token: csrf_token('inactif'~participant.id)}) }}">Désactiver</a>
                 </td>
             </tr>
         {% else %}

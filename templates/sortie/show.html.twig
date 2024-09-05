@@ -22,7 +22,10 @@
         </ul>
         {% if sortie.infosSortie %}
             <h3>Description et info</h3>
-            <p>{{ sortie.infosSortie or sortie.motifAnnuler }}</p>
+           <p>{{ sortie.infosSortie }}</p>
+
+        {% else %}
+        <p>{{ sortie.motifAnnuler }}</p>
         {% endif %}
     </div>
     <div class="placer_btn">
