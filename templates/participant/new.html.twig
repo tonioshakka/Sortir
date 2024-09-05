@@ -6,6 +6,7 @@
     <h1 class="former-titre">Crée un nouveau participant</h1>
 
     {{ include('participant/_form.html.twig') }}
-
-    <a class="create_class" href="{{ path('app_participant_index') }}">back to list</a>
+    <div class="placer_btn">
+        <a class="still_button_form" href="{{ path('app_participant_index') }}">Retour</a>
+    </div>
 {% endblock %}

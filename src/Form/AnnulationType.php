@@ -25,7 +25,7 @@ class AnnulationType extends AbstractType
                 'label' => 'Annuler',
                 'attr' => [
                     'placeholder' => 'Motif d\'annulation',
-                    'class' => 'still_button',
+                    'class' => 'create_orange',
                 ],
             ])
         ;

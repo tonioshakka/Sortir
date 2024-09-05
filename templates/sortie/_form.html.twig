@@ -1,4 +1,6 @@
 {{ form_start(form) }}
     {{ form_widget(form, { 'attr':{'class': 'former_form' }}) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+<div class="placer_btn">
+    <button type="submit" class="btn_save">{{ button_label|default('Crée la sortie') }}</button>
+</div>
 {{ form_end(form) }}

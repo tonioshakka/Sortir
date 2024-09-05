@@ -42,13 +42,12 @@
     </table>
     {% if is_granted('ROLE_ADMIN') %}
     {{ include('participant/_delete_form.html.twig') }}
-        <a class="create_class" href="{{ path('app_participant_index') }}">Retour à la liste des participants</a>
-    {% endif %}
+    <div class="placer_btn"   >
+        <a class="still_button_form" href="{{ path('app_participant_index') }}">Retour</a>
+        {% endif %}
 
-    {% if is_granted('ROLE_ADMIN') or app.user.id == participant.id %}
-    {% endif %}
-    <a class="create_class" href="{{ path('app_participant_edit', {'id': participant.id}) }}">Modifier</a>
-
-
-
+        {% if is_granted('ROLE_ADMIN') or app.user.id == participant.id %}
+        {% endif %}
+        <a class="create_orange" href="{{ path('app_participant_edit', {'id': participant.id}) }}">Modifier</a>
+    </div>
 {% endblock %}
