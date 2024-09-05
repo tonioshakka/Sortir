@@ -21,13 +21,13 @@
     <table class="table-auto">
         <thead>
             <tr>
-                <th>Nom de la sortie</th>
-                <th>Date de la sortie</th>
-                <th>DateLimiteInscription</th>
-                <th>Inscrits/Places</th>
-                <th>Etat</th>
+                <th >Nom de la sortie</th>
+                <th >Date de la sortie</th>
+                <th class="th-responsive">DateLimiteInscription</th>
+                <th class="th-responsive">Inscrits/Places</th>
+                <th class="th-responsive">Etat</th>
                 {#                <th>Inscrit</th>#}
-                <th>Organisateur</th>
+                <th class="th-responsive">Organisateur</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -37,18 +37,18 @@
             <tr>
                 <td><a href="{{ path('app_sortie_show', {'id': sortie.id}) }}">{{ sortie.nom }}</a></td>
                 <td>{{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('d/m/Y H\\Hi') : '' }}</td>
-                <td>{{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date('d/m/Y H\\hi') : '' }}</td>
-                <td>{{ sortie.getNombreInscrits() }} / {{ sortie.NbInscriptionsMax() }}</td>
-                <td>{{ sortie.etat.libelle }}</td>
+                <td class="td-responsive">{{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date('d/m/Y H\\hi') : '' }}</td>
+                <td class="td-responsive">{{ sortie.getNombreInscrits() }} / {{ sortie.NbInscriptionsMax() }}</td>
+                <td class="td-responsive">{{ sortie.etat.libelle }}</td>
 {#              <td>{{ sortie.inscrit }}</td>#}
-                <td><a href={{ path('app_participant_show', {'id': sortie.organisateur.id}) }}>{{ sortie.organisateur.nom }} {{ sortie.organisateur.prenom }}</a></td>
+                <td class="td-responsive"><a href={{ path('app_participant_show', {'id': sortie.organisateur.id}) }}>{{ sortie.organisateur.nom }} {{ sortie.organisateur.prenom }}</a></td>
                 <td>
-                    <a href="{{ path('app_sortie_show', {'id': sortie.id}) }}">show</a>
-                    {% if is_granted('ROLE_ADMIN') or app.user.id == sortie.organisateur.id %}
-                    <a href="{{ path('app_sortie_edit', {'id': sortie.id}) }}">edit</a>
-                    {% endif %}
                     <a class="still_button" href="{{ path('app_sortie_show', {'id': sortie.id}) }}">Voir</a>
-                    <a class="still_button" href="{{ path('app_sortie_edit', {'id': sortie.id}) }}">Modifier</a>
+                    {% if is_granted('ROLE_ADMIN') or app.user.id == sortie.organisateur.id %}
+                        <a class="still_button" href="{{ path('app_sortie_edit', {'id': sortie.id}) }}">Modifier</a>
+                    {% endif %}
+
+
                 </td>
             </tr>
         {% else %}
