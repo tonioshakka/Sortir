@@ -9,6 +9,11 @@
       "css": [
         "/build/app.css"
       ]
+    },
+    "setCoordinate": {
+      "js": [
+        "/build/runtime.js"
+      ]
     }
   }
 }
