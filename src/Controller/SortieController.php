@@ -11,6 +11,7 @@ use App\Repository\EtatRepository;
 use App\Repository\SiteRepository;
 use App\Repository\SortieRepository;
 use App\Service\LieuService;
+use App\Service\AnnulerSortie;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -239,6 +240,7 @@ class SortieController extends AbstractController
                                   EtatRepository $etatRepository,
                                   MailerInterface $mailer,
                                   SortieRepository $sortieRepository,
+                                    AnnulerSortie $annuler,
 
     ): Response
     {
@@ -281,29 +283,31 @@ class SortieController extends AbstractController
         }
 
         // Update l'état de la sortie, désinscrit les participants et on leur envoi un mail.
-            $sortie->setEtat($etat);
-            foreach ($sortie->getParticipant() as $gens){
+        $annuler->annuler($sortie);
 
-                $sortie->removeParticipant($gens);
+//            $sortie->setEtat($etat);
+//            foreach ($sortie->getParticipant() as $gens){
+//
+//                $sortie->removeParticipant($gens);
+//
+//
+//                $email = (new TemplatedEmail())
+//                    ->from('test@glandu.com')
+//                    ->to($gens->getEmail())
+//                    ->htmlTemplate('sortie/email/sortieAnnuler.html.twig')
+//                    ->context([
+//                        'sortie' => $sortie,
+//                        'participant' => $gens
+//
+//                    ]);
+//
+//                $mailer->send($email);
+//
+//            $entityManager->persist($sortie);
+//            $entityManager->flush();
 
-
-                $email = (new TemplatedEmail())
-                    ->from('test@glandu.com')
-                    ->to($gens->getEmail())
-                    ->htmlTemplate('sortie/email/sortieAnnuler.html.twig')
-                    ->context([
-                        'sortie' => $sortie,
-                        'participant' => $gens
-
-                    ]);
-
-                $mailer->send($email);
-
-            $entityManager->persist($sortie);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_sortie_index',[]);
-        }
+//            return $this->redirectToRoute('app_sortie_index',[]);
+//        }
 
         return $this->redirectToRoute('app_sortie_index', []);
 
