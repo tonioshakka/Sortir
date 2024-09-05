@@ -20,7 +20,7 @@ body {
     min-height: 100vh;
 
 }
-.former-titre, .form-container, .table-auto, .footer{
+.former-titre, #img_user, .form-container, .table-auto, .footer{
     margin: 20px 0;
     text-align: center;
 }
@@ -405,9 +405,17 @@ input, textarea{
 }
 /*****************************
     SWOH->PARTICIPANT INSCRIT
+    SHOH->SORTIE
 *****************************/
 .titre-3{
     color: #fb0202;
+}
+#img_user{
+    max-width: 150px;  /* Largeur maximale de 150px */
+    max-height: 150px; /* Hauteur maximale de 150px */
+    width: auto;       /* Maintient le ratio de l'image */
+    height: auto;      /* Maintient le ratio de l'image */
+    object-fit: cover;  /* Découpe l'image pour qu'elle s'adapte bien */
 }
 /*****************************
     RESPONSIVITER
