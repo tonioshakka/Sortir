@@ -10,6 +10,7 @@ use App\Form\TriSortieType;
 use App\Repository\EtatRepository;
 use App\Repository\SiteRepository;
 use App\Repository\SortieRepository;
+use App\Service\LieuService;
 use App\Service\AnnulerSortie;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -57,8 +58,8 @@ class SortieController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_sortie_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, ValidatorInterface $validator): Response
+    #[Route('sortie/new', name: 'app_sortie_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, EntityManagerInterface $entityManager, LieuService $lieuService): Response
     {
         $sortie = new Sortie();
         $form = $this->createForm(SortieType::class, $sortie);
@@ -72,9 +73,17 @@ class SortieController extends AbstractController
             return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
         }
 
+        $submittedData = $request->request->get($form->getName());
+
+        $lat = isset($submittedData['lieu']) ? $submittedData['lieu']['latitude'] : 47.239367;
+        $lng = isset($submittedData['lieu']) ? $submittedData['lieu']['longitude'] : -1.555335;
+
+        $map = $lieuService->getMap($lat, $lng);
+
         return $this->render('sortie/new.html.twig', [
             'sortie' => $sortie,
             'form' => $form,
+            'map' => $map,
         ]);
     }
 
@@ -96,7 +105,7 @@ class SortieController extends AbstractController
 
 
     #[Route('/sortie/edit/{id}', name: 'app_sortie_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Sortie $sortie, EntityManagerInterface $entityManager, ValidatorInterface $validator): Response
+    public function edit(Request $request, Sortie $sortie, EntityManagerInterface $entityManager, lieuService $lieuService): Response
     {
         if($this->getUser() !== $sortie->getOrganisateur()){
             return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_FORBIDDEN);
@@ -112,9 +121,14 @@ class SortieController extends AbstractController
             return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
         }
 
+        $lat = $form->getData()->getLieu()->getLatitude();
+        $lng =  $form->getData()->getLieu()->getLongitude();
+        $map = $lieuService->getMap($lat, $lng);
+
         return $this->render('sortie/edit.html.twig', [
             'sortie' => $sortie,
             'form' => $form,
+            'map' => $map,
         ]);
     }
 

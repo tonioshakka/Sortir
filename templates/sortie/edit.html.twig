@@ -1,9 +1,18 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Edit Sortie{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('setCoordinate') }}
+{% endblock %}
 
 {% block body %}
     <h1 class="former-titre">Edit Sortie</h1>
+    <div id="mapContainer">
+        {{ render_map(map, { style: 'height: 300px; width: 100%' }) }}
+    </div>
+    {{ include('sortie/_form.html.twig', {'button_label': 'Update'}) }}
+    <a class="create_class" href="{{ path('app_sortie_index') }}">back to list</a>
 
     {{ include('sortie/_form.html.twig', {'button_label': 'Mise à jour'}) }}
     <div class="placer_btn">

@@ -18,44 +18,23 @@ class LieuType extends AbstractType
     {
         $builder
             ->add('nom', TextType::class, [
-                'label' => false,
-                'attr' => [
-                    'placeholder' => 'Nom',
-                    'class' => 'still_input_form',
-                ],
-                'required' => false,
-            ])
-            ->add('rue', TextType::class, [
-                'label' => false,
-                'attr' => [
-                    'placeholder' => 'Rue',
-                    'class' => 'still_input_form',
-                ],
-                'required' => false,
-    ])
-            ->add('latitude', NumberType::class, [
-                'label' => false,
-                'attr' => [
-                    'placeholder' => 'Latitutde',
-                    'class' => 'still_input_form',
-                ],
-                'required' => false,
-            ])
-            ->add('longitude', NumberType::class, [
-                'label' => false,
-                'attr' => [
-                    'placeholder' => 'longitude',
-                    'class' => 'still_input_form',
-                ],
+                'label' => 'Nom',
                 'required' => false,
             ])
             ->add('ville', TextType::class, [
-                'label' => false,
-                'attr' => [
-                    'placeholder' => 'Ville',
-                    'class' => 'still_input_form',
-                ],
                 'required' => false
+            ])
+            ->add('rue', TextType::class, [
+                'label' => 'Rue',
+                'required' => false,
+    ])
+            ->add('latitude', NumberType::class, [
+                'label' => 'Latitude',
+                'required' => false,
+            ])
+            ->add('longitude', NumberType::class, [
+                'label' => 'Longitude',
+                'required' => false,
             ])
         ;
     }
