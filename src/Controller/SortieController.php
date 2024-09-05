@@ -63,6 +63,7 @@ class SortieController extends AbstractController
     {
         $sortie = new Sortie();
         $form = $this->createForm(SortieType::class, $sortie);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -71,14 +72,13 @@ class SortieController extends AbstractController
             $entityManager->flush();
 
             return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
+        }elseif ($form->isSubmitted() && !$form->isValid() && $form->getData()->getLieu()) {
+            dd($form->getData()->getLieu());
+
+        }else {
+            $map = $lieuService->getMap(47.239367, -1.555335);
         }
 
-        $submittedData = $request->request->get($form->getName());
-
-        $lat = isset($submittedData['lieu']) ? $submittedData['lieu']['latitude'] : 47.239367;
-        $lng = isset($submittedData['lieu']) ? $submittedData['lieu']['longitude'] : -1.555335;
-
-        $map = $lieuService->getMap($lat, $lng);
 
         return $this->render('sortie/new.html.twig', [
             'sortie' => $sortie,

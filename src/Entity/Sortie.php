@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\EventListener\SortieEntityListener;
-use App\Repository\EtatRepository;
 use App\Repository\SortieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -28,6 +27,7 @@ class Sortie
     private ?string $nom = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Assert\NotNull]
     #[Assert\NotBlank(message: 'La date de début est requise')]
     #[Assert\Type(Types::DATETIME_MUTABLE, message: "Le format de la date est invalide")]
     #[Assert\GreaterThan('now', message: 'Le début de votre sortie doit se situer dabs le futur')]
@@ -77,7 +77,6 @@ class Sortie
     private ?string $motifAnnuler = null;
 
 
-
     public function __construct()
     {
         $this->participant = new ArrayCollection();
@@ -110,7 +109,7 @@ class Sortie
         return $this->dateHeureDebut;
     }
 
-    public function setDateHeureDebut(\DateTimeInterface $dateHeureDebut): static
+    public function setDateHeureDebut(?\DateTimeInterface $dateHeureDebut): static
     {
         $this->dateHeureDebut = $dateHeureDebut;
 

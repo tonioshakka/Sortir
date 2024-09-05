@@ -25,6 +25,7 @@ class SortieType extends AbstractType
 
             ->add('nom', TextType::class, [
                 'label' => false,
+                'required' => false,
                 'attr' => [
                     'placeholder' => 'Nom',
                     'class' => 'still_input_form',
@@ -32,10 +33,12 @@ class SortieType extends AbstractType
             ])
             ->add('dateHeureDebut', null, [
                 'label' => 'Date debut',
+                'required' => false,
                 'widget' => 'single_text',
             ])
             ->add('duree', IntegerType::class, [
                 'label' => false,
+                'required' => false,
                 'attr' => [
                     'placeholder' => 'Durée en minutes',
                     'class' => 'still_input_form',
@@ -64,6 +67,7 @@ class SortieType extends AbstractType
             ])
             ->add('etat', EntityType::class, [
                 'label' => false,
+                'required' => false,
                 'class' => Etat::class,
                 'choice_label' => 'libelle',
                 'placeholder' => 'Etat',
@@ -123,6 +127,7 @@ class SortieType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Sortie::class,
             'allow_extra_fields' => true,
+            'cascade_validation' => true,
         ]);
     }
 }

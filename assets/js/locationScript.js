@@ -2,7 +2,6 @@ function setCoordinate(){
     const city = document.getElementById('sortie_lieuNew_ville');
     const streetName= document.getElementById('sortie_lieuNew_rue');
 
-
     city.addEventListener('change',async  (e) => getCoordinate(e));
     streetName.addEventListener('change',async  (e) => getCoordinate(e));
 }
@@ -53,13 +52,16 @@ async function getNewMap() {
     }
 
 }
+
 if (typeof document !== 'undefined') {
-    setCoordinate();
-    updateMap();
+    document.addEventListener('turbo:load', () => {
+            setCoordinate();
+            updateMap();
+    });
 }
 if (typeof document !== 'undefined') {
     document.addEventListener('turbo:render', () => {
-            setCoordinate();
-            updateMap();
+        setCoordinate();
+        updateMap();
     });
 }
