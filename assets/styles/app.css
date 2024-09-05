@@ -169,6 +169,18 @@ input, textarea{
     width: 50px; /* Ajuster cette valeur en fonction du contenu */
     text-align: center;
 }
+/* ------- */
+/* Media queries pour ajuster les styles sur les petits écrans */
+@media (max-width: 768px) {
+    .th-responsive{
+        display: none;
+    }
+    .td-responsive{
+        display: none;
+    }
+    /* Pour que chaque ligne du tableau devienne un bloc sur petit écran */
+
+}
 /****************
     FOOTER
 *****************/
@@ -304,4 +316,10 @@ input, textarea{
 .still_choice_form {
     border-radius: 15px;
     text-align: center;
+}
+/*****************************
+    SWOH->PARTICIPANT INSCRIT
+*****************************/
+.titre-3{
+    color: #fb0202;
 }

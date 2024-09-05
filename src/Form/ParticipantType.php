@@ -55,8 +55,7 @@ class ParticipantType extends AbstractType
             ])
             ->add('actif')
             ->add('image', ImageType::class, [
-                'label' => 'Profile Picture',
-                'required'=>'false'
+                'required'=>'false',
                 'label' => false,
                 // Configuration spécifique si besoin
             ])
@@ -72,8 +71,20 @@ class ParticipantType extends AbstractType
                 'label' => 'Password',
                 'attr' => ['autocomplete' => 'new-password'],
                 'invalid_message' => 'Le mot de passe ne correspond pas',
-                'first_options' => ['label' => 'Mot de passe'],
-                'second_options' => ['label' => 'Confirmer le mot de passe'],
+                'first_options' => [
+                    'label' => false,
+                    'attr' => [
+                        'placeholder' => 'Mot de passe',
+                        'class' => 'still_input_form'
+                    ],
+                ],
+                'second_options' => ['label' => false,
+                    'attr' => [
+                        'placeholder' => 'Confirmez le mot de passe',
+                        'class' => 'still_input_form'
+                    ],
+                ],
+
             ]);
         }
         if ($options['email_field']) {
@@ -81,7 +92,7 @@ class ParticipantType extends AbstractType
                 'required' =>true,
                 'label' => False,
                 'attr' => [
-                    'placeholder' => 'Prenom',
+                    'placeholder' => 'Email',
                     'class' => 'still_input_form'
                 ],
 
