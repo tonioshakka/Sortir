@@ -69,7 +69,7 @@ class SortieType extends AbstractType
                 'label' => false,
                 'required' => false,
                 'class' => Etat::class,
-                'choice_label' => 'libellé',
+                'choice_label' => 'libelle',
                 'placeholder' => 'Etat',
                 'attr' => [
                     'class' => 'still_choice_form',
