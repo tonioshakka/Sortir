@@ -8,9 +8,10 @@
     <div class="form-container">
         {{ form_start(form) }}
         {{ form_row(form.csv_file) }}
+        <div class="placer_btn">
+            <button type="submit" class="still_button_form">Importer</button>
+        </div>
         {{ form_end(form) }}
     </div>
-    <div class="placer_btn">
-        <button class="still_button_form">Importer</button>
-    </div>
+
 {% endblock %}
