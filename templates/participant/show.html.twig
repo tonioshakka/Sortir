@@ -9,7 +9,12 @@
         <tbody>
         {% if participant.image != null %}
         <img id="img_user" src="{{ asset('uploads/profil_pics/'~ participant.image.imageName) }}" alt="">
+
+        {% else %}
+                <img id="img_user" src="{{ asset('uploads/profil_pics/default_profile.png') }}" alt="">
         {% endif %}
+
+
         <tr>
             <th>Id</th>
             <td>{{ participant.id }}</td>
@@ -19,7 +24,7 @@
             <td>{{ participant.email }}</td>
         </tr>
         <tr>
-            <th>Roles</th>
+            <th>Rôles</th>
             <td>{{ participant.roles ? participant.roles|json_encode : '' }}</td>
         </tr>
         <tr>
@@ -27,11 +32,11 @@
             <td>{{ participant.nom }}</td>
         </tr>
         <tr>
-            <th>Prenom</th>
+            <th>Prénom</th>
             <td>{{ participant.prenom }}</td>
         </tr>
         <tr>
-            <th>Telephone</th>
+            <th>Téléphone</th>
             <td>{{ participant.telephone }}</td>
         </tr>
         <tr>
@@ -47,7 +52,8 @@
         {% endif %}
 
         {% if is_granted('ROLE_ADMIN') or app.user.id == participant.id %}
+            <a class="create_orange" href="{{ path('app_participant_edit', {'id': participant.id}) }}">Modifier</a>
         {% endif %}
-        <a class="create_orange" href="{{ path('app_participant_edit', {'id': participant.id}) }}">Modifier</a>
+
     </div>
 {% endblock %}

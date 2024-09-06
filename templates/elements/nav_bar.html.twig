@@ -9,13 +9,14 @@
             {% if is_granted('IS_AUTHENTICATED') %}
                 <ul class="nav-list">
                     <li class="nav-link"><a class="nav-link" href="{{ path('app_sortie_index') }}">Liste des sorties</a></li>
-                    <li class="nav-link"><a class="nav-link" href="{{ path('app_sortie_new') }}">Crée une sortie</a></li>
+                    <li class="nav-link"><a class="nav-link" href="{{ path('app_sortie_new') }}">Créer une sortie</a></li>
                     <li class="nav-link"><a class="nav-link" href="{{ path('app_participant_show', {'id':app.user.id}) }}">Profil</a></li>
                     {% if is_granted('ROLE_ADMIN') %}
-                        <li class="nav-link"><a class="nav-link" href="{{ path('app_participant_index') }}">Liste des partipants</a></li>
-                        <li class="nav-link"><a class="nav-link" href="{{ path('app_participant_new') }}">Crée un paticipant</a></li>
+                        <li class="nav-link"><a class="nav-link" href="{{ path('app_participant_index') }}">Liste des participants</a></li>
+                        <li class="nav-link"><a class="nav-link" href="{{ path('app_participant_new') }}">Créer un participant</a></li>
+                        <li class="nav-link"><a  class="nav-link" href="{{ path('app_participant_csv_process') }}">Charger un fichier CSV</a></li>
                     {% endif %}
-                    <li class="nav-link"><a class="nav-link" href="{{ path('app_logout') }}">Se déconecter</a></li>
+                    <li class="nav-link"><a class="nav-link" href="{{ path('app_logout') }}">Se déconnecter</a></li>
                 </ul>
             {% endif %}
         </nav>

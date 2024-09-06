@@ -46,7 +46,7 @@ class TriSortieType extends AbstractType
 
             ])
             ->add('dateFin', DateTimeType::class, [
-                'label' => ' et ',
+                'label' => ' ET ',
                 'widget' => 'single_text',
                 'required' => false,
                 'attr' => [

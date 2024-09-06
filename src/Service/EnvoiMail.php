@@ -23,7 +23,7 @@ class EnvoiMail
         $email = (new Email())
             ->from('no-reply@sortir.com')
             ->to($destinataireMail)
-            ->subject('Votre compte a été crée')
+            ->subject('Votre compte a été créé')
             ->text($message . $leMotDePasse);
 
         $this->mailer->send($email);

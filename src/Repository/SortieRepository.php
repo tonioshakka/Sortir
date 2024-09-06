@@ -41,7 +41,8 @@ class SortieRepository extends ServiceEntityRepository
     $dateLimit->modify('-1 month');
 
     $qb = $this->createQueryBuilder('s')
-        ->leftJoin('s.organisateur', 'p');// Utilisez 'lieu' au lieu de 'site'
+        ->leftJoin('s.organisateur', 'p')// Utilisez 'lieu' au lieu de 'site'
+        ->leftJoin('s.participant', 'i');
 
 //    $qb->andWhere('s.dateHeureDebut >= :dateLimit')
 //        ->setParameter('dateLimit', $dateLimit);
@@ -79,7 +80,9 @@ class SortieRepository extends ServiceEntityRepository
         }
 
         if (in_array('inscrit', $criteria['etat'])) {
-            $qb->andWhere('p = :user')
+
+
+            $qb->andWhere('i = :user')
                 ->setParameter('user', $user);
         }
 
@@ -93,7 +96,7 @@ class SortieRepository extends ServiceEntityRepository
                 ->setParameter('now', new \DateTime());
         }
     }
-        $qb->andWhere('s.dateHeureDebut > :dateLimit')->setParameter('dateLimit', $dateLimit);
+    $qb->andWhere('s.dateHeureDebut > :dateLimit')->setParameter('dateLimit', $dateLimit);
     return $qb->getQuery()->getResult();
 }
 

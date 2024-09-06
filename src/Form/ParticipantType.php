@@ -42,14 +42,14 @@ class ParticipantType extends AbstractType
             ->add('prenom', \Symfony\Component\Form\Extension\Core\Type\TextType::class, [
                 'label' => False,
                 'attr' => [
-                    'placeholder' => 'Prenom',
+                    'placeholder' => 'Prénom',
                     'class' => 'still_input_form'
                 ],
             ])
             ->add('telephone', \Symfony\Component\Form\Extension\Core\Type\TextType::class, [
                 'label' => False,
                 'attr' => [
-                    'placeholder' => 'Telephone',
+                    'placeholder' => 'Téléphone',
                     'class' => 'still_input_form'
                 ],
             ])

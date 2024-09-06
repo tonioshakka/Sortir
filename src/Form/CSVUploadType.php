@@ -14,7 +14,7 @@ use Symfony\Component\Validator\Constraints\File;
         {
             $builder
                 ->add('csv_file', FileType::class, [
-                    'label' => 'Télécharger un fichier CSV',
+                    'label' => 'Téléchargez un fichier CSV',
                     'mapped' => false,
                     'required' => true,
                     'constraints' => [

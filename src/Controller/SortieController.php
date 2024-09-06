@@ -72,12 +72,11 @@ class SortieController extends AbstractController
             $entityManager->flush();
 
             return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
-        }elseif ($form->isSubmitted() && !$form->isValid() && $form->getData()->getLieu()) {
-            dd($form->getData()->getLieu());
 
-        }else {
-            $map = $lieuService->getMap(47.239367, -1.555335);
         }
+
+        $map = $lieuService->getMap(47.239367, -1.555335);
+
 
 
         return $this->render('sortie/new.html.twig', [
@@ -107,7 +106,7 @@ class SortieController extends AbstractController
     #[Route('/sortie/edit/{id}', name: 'app_sortie_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Sortie $sortie, EntityManagerInterface $entityManager, lieuService $lieuService): Response
     {
-        if($this->getUser() !== $sortie->getOrganisateur()){
+        if($this->getUser() !== $sortie->getOrganisateur() && !in_array('ROLE_ADMIN', $this->getUser()->getRoles())){
             return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_FORBIDDEN);
         }
         $form = $this->createForm(SortieType::class, $sortie);
@@ -169,7 +168,8 @@ class SortieController extends AbstractController
         }
 
         // Vérifier si il y a encore de la place
-        if (count($sortie->getParticipant()) >= $sortie->getNbInscriptionsMax()) {
+        if ($sortie->getNbInscriptionsMax() && count($sortie->getParticipant()) >= $sortie->getNbInscriptionsMax()) {
+
             $this->addFlash('error', 'Le nombre maximal de participants est atteint, désolé.');
             return $this->redirectToRoute('app_sortie_index', ['id' => $sortie->getId()]);
         }

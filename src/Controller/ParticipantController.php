@@ -59,14 +59,12 @@ class ParticipantController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $leMotDePasse = $generateurDeMotDePasse->genererUnMotDePasse(8);
-            $message = 'Penser a changer votre mot passe l\'or de votre premier connection, votre mot de passe par default est : ';
+            $message = 'Pensez à changer votre mot de passe lors de votre premier connection, votre mot de passe par défault est : ';
             $hashedPassword = $passwordHasher->hashPassword($participant, $leMotDePasse);
             $participant->setPassword($hashedPassword);
 
 
             $image = $participant->getImage();
-
-
 
             if ($image) {
                 $participant->setImage($image);
@@ -93,7 +91,6 @@ class ParticipantController extends AbstractController
     public function show(Participant $participant): Response
     {
 
-//dd($participant);
         return $this->render('participant/show.html.twig', [
             'participant' => $participant,
 
@@ -101,10 +98,10 @@ class ParticipantController extends AbstractController
     }
 
     #[Route('/edit/{id}', name: 'app_participant_edit', methods: ['GET', 'POST'])]
-    #[IsGranted("ROLE_USER")]
+    #[isGranted("ROLE_USER")]
     public function edit(Request $request, Participant $participant,UserPasswordHasherInterface $passwordHasher ,EntityManagerInterface $entityManager): Response
     {
-        if($this->getUser() !== $participant && $this->isCsrfTokenValid('editer' . $participant->getId(), $request->request->get('_token'))) {
+        if($this->getUser() !== $participant && !in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
             return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_FORBIDDEN);
         }
         $form = $this->createForm(ParticipantType::class, $participant, [
@@ -163,17 +160,16 @@ class ParticipantController extends AbstractController
      */
     #[Route('/inactif/{id}', name: 'app_participant_inactif', methods: ['GET'])]
     #[IsGranted("ROLE_USER")]
-    public function inactif(Request $request, Participant $participant, EntityManagerInterface $entityManager, SortieRepository $sortieRepository, AnnulerSortie $annulerSortie): Response
+    public function inactif(Request $request, Participant $participant, EntityManagerInterface $entityManager, ParticipantRepository $participantRepository, AnnulerSortie $annulerSortie, SortieRepository $sortieRepository): Response
     {
 
 
-        if ($this-> isCsrfTokenValid('inactif'.$participant->getId(), $request->query->get('_token'))) {
-
-            $sortiesEnTantQuOrganisateur= $sortieRepository->find($participant->getId());
+        if ($this-> isCsrfTokenValid('inactif'.$participant->getId(), $request->query->get('token'))) {
 
 
+            $sortiesEnTantQuOrganisateur= $participantRepository->find($participant->getId())->getMesSorties();
 
-            // Si le participant est organisateur de sorties, on les annule et les supprime
+            // Si le participant est organisateur de sorties, on les annule et les supprimes
             if (!empty($sortiesEnTantQuOrganisateur)) {
                 foreach ($sortiesEnTantQuOrganisateur as $sortie) {
                     $annulerSortie->annuler($sortie);

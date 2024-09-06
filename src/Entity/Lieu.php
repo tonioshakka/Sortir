@@ -61,7 +61,7 @@ class Lieu
         return $this->nom;
     }
 
-    public function setNom(string $nom): static
+    public function setNom(?string $nom): static
     {
         $this->nom = $nom;
 
@@ -73,7 +73,7 @@ class Lieu
         return $this->rue;
     }
 
-    public function setRue(string $rue): static
+    public function setRue(?string $rue): static
     {
         $this->rue = $rue;
 
@@ -85,7 +85,7 @@ class Lieu
         return $this->latitude;
     }
 
-    public function setLatitude(float $latitude): static
+    public function setLatitude(?float $latitude): static
     {
         $this->latitude = $latitude;
 
@@ -97,7 +97,7 @@ class Lieu
         return $this->longitude;
     }
 
-    public function setLongitude(float $longitude): static
+    public function setLongitude(?float $longitude): static
     {
         $this->longitude = $longitude;
 

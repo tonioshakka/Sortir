@@ -37,7 +37,7 @@ class AnnulerSortie
 
 
             $email = (new TemplatedEmail())
-                ->from('test@glandu.com')
+                ->from('no-reply@sortir.com')
                 ->to($gens->getEmail())
                 ->htmlTemplate('sortie/email/sortieAnnuler.html.twig')
                 ->context([

@@ -9,7 +9,7 @@
     <div class="placer_btn">
             <a class="still_button_form" href="{{ path('app_participant_index') }}">Retour</a>
         {% if is_granted('ROLE_ADMIN') %}
-            <a class="create_rouge" href="{{ path('app_participant_edit', {'id': participant.id, 'token': csrf_token('editer'~participant.id)}) }}">Supprimer</a>
+            <a class="create_rouge" href="{{ path('app_participant_edit', {'id': participant.id, '_token': csrf_token('editer'~participant.id)}) }}">Supprimer</a>
         {% endif %}
     </div>
 {% endblock %}

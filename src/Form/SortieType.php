@@ -32,7 +32,7 @@ class SortieType extends AbstractType
                 ],
             ])
             ->add('dateHeureDebut', null, [
-                'label' => 'Date debut',
+                'label' => 'Date de début',
                 'required' => false,
                 'widget' => 'single_text',
             ])
@@ -45,7 +45,7 @@ class SortieType extends AbstractType
                 ],
             ])
             ->add('dateLimiteInscription', null, [
-                'label' => 'Date limite',
+                'label' => 'Date limite d\'inscription',
                 'widget' => 'single_text',
                 'required' => false,
             ])
@@ -69,7 +69,7 @@ class SortieType extends AbstractType
                 'label' => false,
                 'required' => false,
                 'class' => Etat::class,
-                'choice_label' => 'libelle',
+                'choice_label' => 'libellé',
                 'placeholder' => 'Etat',
                 'attr' => [
                     'class' => 'still_choice_form',
@@ -89,19 +89,19 @@ class SortieType extends AbstractType
                 ],
             ])
             ->add('lieuNew', LieuType::class, [
-                'label' => 'Ajouter un lieu',
+                'label' => 'Ajoutez un lieu',
                 'required' => false,
-                'mapped' => false,
+                'mapped' => true,
                 'property_path' => 'lieu',
             ])
             ->addEventListener(FormEvents::PRE_SUBMIT, function(FormEvent $event) {
                 $data = $event->getData();
                 $form = $event->getForm();
 
-                if ($data['lieuNew']['nom']) {
+                if ($data['lieuNew']['nom'] || $data['lieuNew']['latitude']) {
 
                     $form->add('lieuNew', LieuType::class, [
-                        'label' => 'Ajouter un lieu',
+                        'label' => 'Ajoutez un lieu',
                         'required' => false,
                         'mapped' => true,
                         'property_path' => 'lieu',
@@ -115,7 +115,13 @@ class SortieType extends AbstractType
                         'choice_label' => function($lieu) {
                             return $lieu->getNom() . ' - ' . $lieu->getRue() . ' - ' . $lieu->getVille();
                         },
-                        'placeholder' => '-- Selectionner une lieu --',
+                        'placeholder' => '-- Sélectionnez un lieu --',
+                    ]);
+                    $form->add('lieuNew', LieuType::class, [
+                        'label' => 'Ajoutez un lieu',
+                        'required' => false,
+                        'mapped' => false,
+                        'property_path' => 'lieu',
                     ]);
                 }
             })
