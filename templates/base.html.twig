@@ -23,14 +23,11 @@
             {% endfor %}
         {% endfor %}
 
-
-    <div>
             {{ include('elements/nav_bar.html.twig') }}
             <main>
                 {% block body %}{% endblock %}
             </main>
             {{ include('elements/footer.html.twig') }}
-        </div>
     </body>
 </html>
 
