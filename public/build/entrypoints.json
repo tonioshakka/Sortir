@@ -5,17 +5,6 @@
         "/build/runtime.js",
         "/build/vendors-node_modules_core-js_modules_es_array_for-each_js-node_modules_core-js_modules_es_obj-7bb33f.js",
         "/build/app.js"
-      ],
-      "css": [
-        "/build/app.css"
-      ]
-    },
-    "setCoordinate": {
-      "js": [
-        "/build/runtime.js",
-        "/build/vendors-node_modules_core-js_modules_es_array_for-each_js-node_modules_core-js_modules_es_obj-7bb33f.js",
-        "/build/vendors-node_modules_core-js_modules_es_array_concat_js-node_modules_core-js_modules_es_array-bcafb6.js",
-        "/build/setCoordinate.js"
       ]
     }
   }
